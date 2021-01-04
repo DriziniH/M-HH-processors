@@ -1,0 +1,1 @@
+C:\Showcase\kafka\bin\windows\kafka-topics --create --topic car-usa --bootstrap-server localhost:9092
