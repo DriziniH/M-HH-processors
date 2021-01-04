@@ -2,7 +2,7 @@ import sys
 import ast
 import json
 
-from confluent_kafka import Consumer, Producer KafkaError, KafkaException
+from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from src.schema import properties as p
 from datetime import datetime
 
