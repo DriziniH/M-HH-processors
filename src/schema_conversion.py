@@ -93,15 +93,18 @@ def resolve_mapping(schema, df_raw):
     for field in schema:
         data.append(resolve_subtyes(field, df_raw))
 
+    print(data)
+
     # Transpose data (dont use numpy since this infers a dtype schema)
-    data_t = [[data[j][i] for j in range(len(data))] for i in range(len(data[0]))]
+    if len(data[0]) > 1:
+        return [[data[j][i] for j in range(len(data))] for i in range(len(data[0]))]
+    else:
+        return data  
 
-    return data_t  
 
-
-def convert_schema(spark, schema, df_raw):
+def convert_schema(schema, df_raw):
     """reads and maps data from df_raw with schema information
-    returns spark df
+    returns mapped data
 
     Args:
         schema (StructType): schema and mapping information
@@ -109,4 +112,4 @@ def convert_schema(spark, schema, df_raw):
     """
 
     df = resolve_mapping(schema, df_raw)
-    return spark.createDataFrame(df, schema)
+    return df
