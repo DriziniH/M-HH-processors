@@ -1,26 +1,20 @@
 from enum import Enum
 import src.conf.constants as c
-
-
-class Bucket_Paths(Enum):
-    RAW_EVENTS = c.RAW_EVENTS
-    RAW = c.RAW
-    PROCESSED = c.PROCESSED
-    ANALYZED = c.ANALYZED
+import uuid
 
 
 SCHEMA = {
     c.SCHEMA_USA: {
-        c.SCHEMA_PATH: "src/conf/schemas/schema_usa.json",
-        c.SCHEMA_TOPIC : "car-usa-processed"
+        c.SCHEMA_PATH: "src/conf/schemas/dict_usa.json",
+        c.SCHEMA_TOPIC: "car-usa-processed"
     },
     c.SCHEMA_EU: {
-        c.SCHEMA_PATH: "src/conf/schemas/schema_eu.json",
-        c.SCHEMA_TOPIC : "car-eu-processed"
+        c.SCHEMA_PATH: "src/conf/schemas/dict_eu.json",
+        c.SCHEMA_TOPIC: "car-eu-processed"
     },
     c.SCHEMA_CHINA: {
         c.SCHEMA_PATH: "src/conf/schemas/schema_china.json",
-        c.SCHEMA_TOPIC : "car-china-processed"
+        c.SCHEMA_TOPIC: "car-china-processed"
     }
 }
 
@@ -29,11 +23,12 @@ REGIONS = {
     c.REGION_USA: {
         c.RAW_EVENTS: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_RAW_EVENTS\\",
         c.RAW: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_RAW\\",
+        c.PREPROCESSED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PREPROCESSED\\",
         c.PROCESSED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\",
         c.ANALYZED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_ANALYZED\\",
         c.SCHEMAS: {
             c.SCHEMA_USA: SCHEMA[c.SCHEMA_USA],
-            c.SCHEMA_EU: SCHEMA[c.SCHEMA_EU]
+            #c.SCHEMA_EU: SCHEMA[c.SCHEMA_EU]
         }
     },
 
@@ -41,6 +36,7 @@ REGIONS = {
     c.REGION_EU: {
         c.RAW_EVENTS: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_RAW_EVENTS\\",
         c.RAW: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_RAW\\",
+        c.PREPROCESSED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_PREPROCESSED\\",
         c.PROCESSED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_PROCESSED\\",
         c.ANALYZED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_ANALYZED\\",
         c.SCHEMAS: {
@@ -52,6 +48,7 @@ REGIONS = {
     c.REGION_CHINA: {
         c.RAW_EVENTS: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_CHINA_RAW_EVENTS\\",
         c.RAW: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_CHINA_RAW\\",
+        c.PREPROCESSED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_CHINA_PREPROCESSED\\",
         c.PROCESSED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_CHINA_PROCESSED\\",
         c.ANALYZED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_CHINA_ANALYZED\\",
         c.SCHEMAS: {

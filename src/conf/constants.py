@@ -9,6 +9,7 @@ SCHEMA_CHINA = "SCHEMA_CHINA"
 
 RAW = "raw"
 RAW_EVENTS = "events"
+PREPROCESSED = "preprocessed"
 PROCESSED = "processed"
 ANALYZED = "analyzed"
 

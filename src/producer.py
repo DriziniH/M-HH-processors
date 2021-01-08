@@ -6,6 +6,9 @@ import json
 import random
 import uuid
 import time
+import random
+
+from src.conf import properties_showcase as ps
 
 
 running = True
@@ -16,10 +19,12 @@ def acked(err, msg):
         print("Failed to deliver message: %s: %s" % (str(msg), str(err)))
         running = False
     else:
-        print("Message produced: %s || %s" % (msg.key(), msg.value()))
+        # print("Message produced: %s || %s || %s" %
+        #       (msg.topic(), msg.key(), msg.value()))
+        pass
 
 
-def publish_infite(topic, car_id):
+def publish_infite(topic, car_id, region):
     """Publishes infinitly on given topic with random generated key and values
 
     Args:
@@ -31,23 +36,28 @@ def publish_infite(topic, car_id):
 
     producer = Producer(conf)
 
-    key = {"region": "USA", "carID": car_id}
+    key = {"region": region, "carId": car_id}
+
+    if region == "EU":
+        data = ps.car_data_eu
+    elif region == "USA":
+        data = ps.car_data_usa
+    
+
 
     while running:
 
-        timestamp = datetime.now().timestamp() * 1000
-        key["timestamp"] = timestamp
+        timestamp = int(datetime.now().timestamp() * 1000)
 
-        data = f'SENS_TEMP_ENGINE: {random.uniform(30.0,70.0)}, SENS_TEMP_BREAKS:  {random.uniform(30.0,70.0)}, SENS_TEMP_TIRES: {random.uniform(30.0,120.0)}, SENS_OIL:{random.randrange(50, 100)}, SENS_BREAK: {bool(random.getrandbits(1))}, SENS_GAS:{random.randrange(80, 120)}, SENS_MPH:{random.uniform(0,200)}, SENS_LAT:{random.uniform(80.0,83.0)}, SENS_LON: {random.uniform(90.0,99.0)}'
-
-        producer.produce(topic, key=json.dumps(key).encode(),
-                        value=data.encode(), callback=acked)
+        producer.produce(topic, key=json.dumps(key).encode(), timestamp=timestamp,
+                         value=json.dumps(data).encode(), callback=acked)
 
         # Wait up to 1 second for events. Callbacks will be invoked during
-        # this method call if the message is acknowledged.
+        # this method calls if the message is acknowledged.
         producer.poll(1)
-        
+
         time.sleep(1)
+
 
 def publish(topic, key, data):
     """Publishes one time on given topic with key and data
@@ -61,20 +71,19 @@ def publish(topic, key, data):
             'client.id': socket.gethostname()}
 
     producer = Producer(conf)
-    
-    timestamp = datetime.now().timestamp() * 1000
-    key["timestamp"] = timestamp
+
+    timestamp = int(datetime.now().timestamp() * 1000)
 
     key = json.dumps(key).encode()
     data = str(data).encode()
-    
-    producer.produce(topic, key=key,
-                    value=data, callback=acked)
+
+    producer.produce(topic, key=key, timestamp=timestamp,
+                     value=data, callback=acked)
 
     # Wait up to 1 second for events. Callbacks will be invoked during
     # this method call if the message is acknowledged.
     producer.poll(1)
-    
+
 
 def shutdown():
     running = False

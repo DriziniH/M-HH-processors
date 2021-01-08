@@ -1,0 +1,149 @@
+{
+    "fields": [
+        {
+            "name": "model",
+            "type": "str"
+        },
+        {
+            "name": "fuel",
+            "type": "str"
+        },
+        {
+            "name": "mileage_total",
+            "type": "float"
+        },
+        {
+            "name": "mileage",
+            "type": "float"
+        },
+        {
+            "name": "travel_time_total",
+            "type": "int"
+        },
+        {
+            "name": "travel_time",
+            "type": "int"
+        },
+        {
+            "name": "oil_level",
+            "type": "float"
+        },
+        {
+            "name": "break_fluid_level",
+            "type": "float"
+        },
+        {
+            "name": "fuel_level",
+            "type": "float"
+        },
+        {
+            "fields": [
+                {
+                    "name": "engine",
+                    "type": "float"
+                },
+                {
+                    "name": "breaks",
+                    "type": "float"
+                }
+            ],
+            "name": "health",
+            "type": "dict"
+        },
+        {
+            "name": "tire_pressure",
+            "type": "float"
+        },
+        {
+            "fields": [
+                {
+                    "name": "engine",
+                    "type": "float"
+                },
+                {
+                    "name": "car",
+                    "type": "float"
+                },
+                {
+                    "name": "breaks",
+                    "type": "float"
+                },
+                {
+                    "name": "tires",
+                    "type": "float"
+                }
+            ],
+            "name": "temperature",
+            "type": "dict"
+        },
+        {
+            "name": "break_power",
+            "type": "float"
+        },
+        {
+            "name": "break",
+            "type": "bool"
+        },
+        {
+            "name": "gas_power",
+            "type": "float"
+        },
+        {
+            "name": "gas",
+            "type": "bool"
+        },
+        {
+            "name": "light",
+            "type": "bool"
+        },
+        {
+            "name": "acc",
+            "type": "float"
+        },
+        {
+            "name": "mph",
+            "type": "float"
+        },
+        {
+            "name": "rpm",
+            "type": "float"
+        },
+        {
+            "name": "oxygen_level",
+            "type": "float"
+        },
+        {
+            "fields": [
+                {
+                    "name": "lat",
+                    "type": "float"
+                },
+                {
+                    "name": "lon",
+                    "type": "float"
+                }
+            ],
+            "name": "pos",
+            "type": "dict"
+        },
+        {
+            "fields": [
+                {
+                    "name": "on",
+                    "type": "bool"
+                },
+                {
+                    "name": "service",
+                    "type": "str"
+                },
+                {
+                    "name": "volume",
+                    "type": "float"
+                }
+            ],
+            "name": "infotainment",
+            "type": "dict"
+        }
+    ],
+    "name": "raw_data_usa"
+}

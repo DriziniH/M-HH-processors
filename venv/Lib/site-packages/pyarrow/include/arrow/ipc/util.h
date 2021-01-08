@@ -19,6 +19,10 @@
 
 #include <cstdint>
 
+#include "arrow/array.h"
+#include "arrow/io/interfaces.h"
+#include "arrow/status.h"
+
 namespace arrow {
 namespace ipc {
 

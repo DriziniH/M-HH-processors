@@ -15,8 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// This API is EXPERIMENTAL.
-
 #pragma once
 
 #if defined(_WIN32) || defined(__CYGWIN__)

@@ -35,7 +35,7 @@ def write_data(path, mode, data):
         print(str(e))
         return False
 
-    print(f"Write operation successfull. Path: {path}")
+    #print(f"Write operation successfull. Path: {path}")
     return True
 
 
@@ -51,7 +51,7 @@ def read_partitioned_parquet_to_pandas(path):
     try:
         table = pq.read_table(path)
         pdf = table.to_pandas()
-        print("Successfully red partitioned parquet file")
+        #print("Successfully red partitioned parquet file")
     except Exception as e:
         print(e)
         return pd.DataFrame()
@@ -78,5 +78,5 @@ def write_partitioned_parquet_from_pandas(pdf, path, partition_cols=None):
         print(e)
         return False
 
-    print("Writing partitioned parquet operation successfull")
+    #print("Writing partitioned parquet operation successfull")
     return True

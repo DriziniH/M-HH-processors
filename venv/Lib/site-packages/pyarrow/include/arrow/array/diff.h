@@ -17,19 +17,16 @@
 
 #pragma once
 
-#include <cstdint>
 #include <functional>
 #include <iosfwd>
 #include <memory>
 
-#include "arrow/array/array_base.h"
-#include "arrow/array/array_nested.h"
-#include "arrow/result.h"
-#include "arrow/status.h"
-#include "arrow/type.h"
+#include "arrow/type_fwd.h"
 #include "arrow/util/visibility.h"
 
 namespace arrow {
+
+class MemoryPool;
 
 /// \brief Compare two arrays, returning an edit script which expresses the difference
 /// between them
@@ -57,7 +54,7 @@ namespace arrow {
 /// \return an edit script array which can be applied to base to produce target
 ARROW_EXPORT
 Result<std::shared_ptr<StructArray>> Diff(const Array& base, const Array& target,
-                                          MemoryPool* pool = default_memory_pool());
+                                          MemoryPool* pool);
 
 /// \brief visitor interface for easy traversal of an edit script
 ///

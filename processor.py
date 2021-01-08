@@ -6,24 +6,60 @@ from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from src.conf import properties as p
 from datetime import datetime
 
-from src.schema_conversion import convert_schema
+#from src.schema_conversion import convert_schema
+from src.schema_conversion_dict import convert_schema
 import src.io as io
 import src.conf.constants as c
 from src.producer import publish
+from src.flatten_json_data import flatten_json
 
-from pyspark.sql.types import *
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pandas as pd
-import socket
 
-from pyspark.sql import SparkSession
 
 
 running = True
 
 
-def extract_metadata(metadata):
+def process_data(metadata, region, raw_data):
+    """
+    Reads schemas from properties
+    Creates mapped data based on all schemas from given region 
+    Publishes data to specific topic
+    Persist data as parquet in data lake
+
+    Args:
+        metadata (dict): message metadata
+        region (dict): region with schema information
+        raw_data (dict): raw data
+    
+    """
+   
+    for key, value in region[c.SCHEMAS].items():
+        # read schema and convert to struct
+        with open(value[c.SCHEMA_PATH]) as f:
+            schema = json.load(f)
+
+        mapped_data = convert_schema(schema, raw_data)
+
+        metadata["type"] = "data" #TODO mehrere topics für analyse und daten oder metadaten?
+
+        #spark.createDataFrame(mapped_data, schema)
+
+        publish(value[c.SCHEMA_TOPIC], key=metadata,
+        data=mapped_data)
+
+        #persist processed data as parquet #TODO how is nested data optimally persisted in parquet
+        flatten = flatten_json(mapped_data)
+        pdf = pd.DataFrame(mapped_data)
+        print(pdf)
+        if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PROCESSED], ["year", "month", "day"]):
+            print(f"Failed to persist {c.PROCESSED} data to {region[c.PROCESSED]}!")
+   
+
+
+def extract_message(msg):
     """Extracts metadata information from message
 
     Args:
@@ -36,48 +72,26 @@ def extract_metadata(metadata):
         tuple: metadata
     """
     try:
-        region_string = metadata["region"]
-        timestamp_millis = metadata["timestamp"]
-        car_id = metadata["carID"]
+        key = msg.key().decode('UTF-8')
+        value = msg.value().decode('UTF-8')
 
+        metadata = json.loads(msg.key())
+
+        car_id = metadata["carId"]
+
+        region_string = metadata["region"]
         if region_string not in p.REGIONS:
             raise Exception("Region not available!")
-
         region = p.REGIONS[region_string]
-        dt = datetime.fromtimestamp(timestamp_millis/1000.0)
 
-        return region, timestamp_millis, dt, car_id
+        timestamp_millis = msg.timestamp()[1]
+        dt = datetime.fromtimestamp(timestamp_millis/1000)
+
+        return key, value, metadata, region, timestamp_millis, dt, car_id
 
     except Exception as e:
         print(e)
         return None
-
-
-
-def schematize_and_publish(metadata, region, pdf):
-    """
-    Reads schemas from properties
-    Creates mapped data based on all schemas from given region 
-    Publishes to topic from schema
-
-    Args:
-        metadata (dict): message metadata
-        region (dict): region with schema information
-        pdf (pandas data frame): raw data
-    """
-
-    for key, value in region[c.SCHEMAS].items():
-        # read schema and convert to struct
-        with open(value[c.SCHEMA_PATH]) as f:
-            json_schema = json.load(f)
-        schema = StructType.fromJson(json_schema)
-
-        mapped_data = convert_schema(schema, pdf)
-
-        #spark.createDataFrame(mapped_data, schema)
-
-        publish(value[c.SCHEMA_TOPIC], key=metadata,
-            data=mapped_data)
 
 
 def process_msg(msg):
@@ -87,12 +101,8 @@ def process_msg(msg):
     Args:
         msg (kafka message): kafka message
     """
-    key = msg.key().decode('UTF-8')
-    data = msg.value().decode('UTF-8')
 
-    metadata = json.loads(key)
-
-    region, timestamp_millis, dt, car_id = extract_metadata(metadata)
+    key, value, metadata, region, timestamp_millis, dt, car_id = extract_message(msg)
 
     # time data
     day = dt.day
@@ -104,8 +114,9 @@ def process_msg(msg):
         "topic": msg.topic(),
         "partition": msg.partition(),
         "offset": msg.offset(),
+        "timestamp" : msg.timestamp(),
         "key": key,
-        "value": data
+        "value": value
     }
 
     io.write_data(
@@ -113,22 +124,32 @@ def process_msg(msg):
 
     # decode and persist raw data
     io.write_data(
-        f'{region[c.RAW]}year={year}\\month={month}\\day={day}\\data', 'a', json.dumps({key: data}))  # TODO Name der Datei
+        f'{region[c.RAW]}year={year}\\month={month}\\day={day}\\data', 'a', json.dumps({key: value}))
 
     # create pandas df with time information
     pdf = pd.DataFrame([[car_id, timestamp_millis, year, month, day]],
-                       columns=["carId","timestamp", "year", "month", "day"])
+                       columns=["carId", "timestamp", "year", "month", "day"])
 
-    # split and add data to pandas df
-    for entry in data.split(","):
-        pdf[entry.split(":")[0].strip()] = entry.split(":")[1].strip()
+    # load data and enrich with time information
+    data = json.loads(value)
+    #flatten values for easier conversion (file type and schema)
+    data = flatten_json(data)
+    data["carId"] = car_id
+    data["timestamp"] = timestamp_millis
+    data["year"] = year
+    data["month"] = month
+    data["day"] = day
 
-    if io.write_partitioned_parquet_from_pandas(pdf, region[c.PROCESSED], ["year", "month", "day"]):
-        print("Data successfully persisted!")
-    else:
-        print("Failed to persist data!")
+    #persist preprocessed data as parquet
+    pdf = pd.DataFrame.from_dict(data)
+    if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PREPROCESSED], ["year", "month", "day"]):
+        print(f"Failed to persist {c.PREPROCESSED} data to {region[c.PREPROCESSED]}!")
 
-    schematize_and_publish(metadata, region, pdf)
+
+    process_data(metadata, region, data)
+ 
+
+        
 
 
 def shutdown():
@@ -174,9 +195,8 @@ def consume_log(topics):
         consumer.close()
 
 
-
 # spark = SparkSession.builder.appName("Spark Session").getOrCreate()
 # # Enable Arrow-based columnar data transfers
 # spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
 
-consume_log(["car-usa","car-eu"])
+consume_log(["car-usa", "car-eu"])
