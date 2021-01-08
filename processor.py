@@ -8,10 +8,10 @@ from datetime import datetime
 
 #from src.schema_conversion import convert_schema
 from src.schema_conversion_dict import convert_schema
-import src.io as io
+import src.utility.io as io
 import src.conf.constants as c
 from src.producer import publish
-from src.flatten_json_data import flatten_json
+from src.utility.dict_tools import flatten_json
 
 import pyarrow as pa
 import pyarrow.parquet as pq
