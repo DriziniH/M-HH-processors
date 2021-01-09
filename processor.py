@@ -18,11 +18,10 @@ import pyarrow.parquet as pq
 import pandas as pd
 
 
-
 running = True
 
 
-def process_data(metadata, region, raw_data):
+def process_data(metadata, region, data, data_base):
     """
     Reads schemas from properties
     Creates mapped data based on all schemas from given region 
@@ -32,31 +31,31 @@ def process_data(metadata, region, raw_data):
     Args:
         metadata (dict): message metadata
         region (dict): region with schema information
-        raw_data (dict): raw data
-    
+        data (dict): car data
+        data_base (dict) : base data with car id and time information
+
     """
-   
+
     for key, value in region[c.SCHEMAS].items():
         # read schema and convert to struct
         with open(value[c.SCHEMA_PATH]) as f:
             schema = json.load(f)
 
-        mapped_data = convert_schema(schema, raw_data)
+        mapped_data = convert_schema(schema, data, data_base)
 
-        metadata["type"] = "data" #TODO mehrere topics für analyse und daten oder metadaten?
-
-        #spark.createDataFrame(mapped_data, schema)
+        # TODO mehrere topics für analyse und daten oder metadaten?
+        metadata["type"] = "data"
 
         publish(value[c.SCHEMA_TOPIC], key=metadata,
-        data=mapped_data)
+                data=mapped_data)
 
-        #persist processed data as parquet #TODO how is nested data optimally persisted in parquet
+        # persist processed data as parquet #TODO how is nested data optimally persisted in parquet
         flatten = flatten_json(mapped_data)
-        pdf = pd.DataFrame(mapped_data)
-        print(pdf)
+        pdf = pd.DataFrame(flatten, index=[0])
+
         if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PROCESSED], ["year", "month", "day"]):
-            print(f"Failed to persist {c.PROCESSED} data to {region[c.PROCESSED]}!")
-   
+            print(
+                f"Failed to persist {c.PROCESSED} data to {region[c.PROCESSED]}!")
 
 
 def extract_message(msg):
@@ -102,7 +101,8 @@ def process_msg(msg):
         msg (kafka message): kafka message
     """
 
-    key, value, metadata, region, timestamp_millis, dt, car_id = extract_message(msg)
+    key, value, metadata, region, timestamp_millis, dt, car_id = extract_message(
+        msg)
 
     # time data
     day = dt.day
@@ -114,7 +114,7 @@ def process_msg(msg):
         "topic": msg.topic(),
         "partition": msg.partition(),
         "offset": msg.offset(),
-        "timestamp" : msg.timestamp(),
+        "timestamp": msg.timestamp(),
         "key": key,
         "value": value
     }
@@ -132,24 +132,27 @@ def process_msg(msg):
 
     # load data and enrich with time information
     data = json.loads(value)
-    #flatten values for easier conversion (file type and schema)
-    data = flatten_json(data)
-    data["carId"] = car_id
-    data["timestamp"] = timestamp_millis
-    data["year"] = year
-    data["month"] = month
-    data["day"] = day
 
-    #persist preprocessed data as parquet
+    # flatten values for columnar format and schema conversion
+    data = flatten_json(data)
+
+    data_base = {
+        "carId": car_id,
+        "timestamp": timestamp_millis,
+        "year": year,
+        "month": month,
+        "day": day
+    }
+
+    data.update(data_base)
+
+    # persist preprocessed data as parquet
     pdf = pd.DataFrame.from_dict(data)
     if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PREPROCESSED], ["year", "month", "day"]):
-        print(f"Failed to persist {c.PREPROCESSED} data to {region[c.PREPROCESSED]}!")
+        print(
+            f"Failed to persist {c.PREPROCESSED} data to {region[c.PREPROCESSED]}!")
 
-
-    process_data(metadata, region, data)
- 
-
-        
+    process_data(metadata, region, data, data_base)
 
 
 def shutdown():

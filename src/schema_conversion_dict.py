@@ -66,13 +66,13 @@ def map_field(data_raw, field):
     return data
 
 
-# Struct
-def resolve_mapping(schema, data_raw):
-    """Takes json schema and recursivly maps all raw data to schematised dict
+def convert_schema(schema, data_raw, data = {}):
+    """Takes fields from json schema and recursivly maps raw data to schematised dict
 
     Args:
-        schema (dict): json schema definition
+        schema (dict): schema and mapping information
         data_raw (dict): raw data
+        data (dict) : data (potentially not empty) where data is mapped to
 
     Returns:
         data [dict]: dict with schematized data
@@ -120,22 +120,10 @@ def resolve_mapping(schema, data_raw):
             return map_field(data_raw, field)
 
     # initialize array with row length from raw data and column length of schema
-    data = {}
 
-    for field in schema:
-        data.update(resolve_subtype(field, data_raw))
+    for field in schema["fields"]:
+        data.update(resolve_subtype(field, data_raw, data))
 
     return data
 
 
-def convert_schema(schema, data_raw):
-    """reads and maps data from data_raw with schema information
-    returns mapped data
-
-    Args:
-        schema (dict): schema and mapping information
-        data_raw (dict): raw data
-    """
-
-    df = resolve_mapping(schema["fields"], data_raw)
-    return df
