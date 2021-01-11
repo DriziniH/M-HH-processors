@@ -102,7 +102,9 @@ def consume_log(topics):
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
-                print(type(msg.timestamp()))
+                print(msg.key())
+                print(msg.value())
+                print(msg.timestamp()[1])
 
     finally:
         # Close down consumer to commit final offsets.

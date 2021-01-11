@@ -3,7 +3,19 @@ import errno
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pandas as pd
+from datetime import datetime
 
+
+def create_path(path):
+    if not os.path.exists(os.path.dirname(path)):
+        try:
+            os.makedirs(os.path.dirname(path))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
+        except Exception as e:
+            print(e)
+            return False
 
 def write_data(path, mode, data):
     """Creates dirs if not existent and writes data in given mode
@@ -18,15 +30,7 @@ def write_data(path, mode, data):
     """
 
     try:
-        if not os.path.exists(os.path.dirname(path)):
-            try:
-                os.makedirs(os.path.dirname(path))
-            except OSError as exc:  # Guard against race condition
-                if exc.errno != errno.EEXIST:
-                    raise
-            except Exception as e:
-                print(e)
-                return False
+        create_path(path)
 
         with open(path, mode) as f:
             f.write(data)

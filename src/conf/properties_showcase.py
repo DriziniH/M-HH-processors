@@ -41,106 +41,112 @@ INFOTAINMENT_SERVICE = {
     3: "Information System"
 }
 
-car_data_usa = {
-    "model": MODELS[random.randrange(0, 5)]["name"],
-    "labels": MODELS[random.randrange(0, 5)]["labels"],
-    "fuel": FUEL[random.randrange(0, 3)],
+
+def get_car_data_usa():
+    model = random.randrange(0, 5)
+    return {
+        "model": MODELS[model]["name"],
+        "labels": MODELS[model]["labels"],
+        "fuel": FUEL[random.randrange(0, 3)],
 
 
-    "mileage_total":  random.uniform(2000.0, 100000.0),
-    "mileage": random.uniform(0.0, 500.0),
-    "travel_time_total": random.randrange(0, 10000000000),
-    "travel_time": random.randrange(0, 500),
+        "mileage_total":  random.uniform(2000.0, 100000.0),
+        "mileage": random.uniform(0.0, 500.0),
+        "travel_time_total": random.randrange(0, 10000000000),
+        "travel_time": random.randrange(0, 500),
 
-    "oil_level": random.uniform(0.0, 100.0),
-    "break_fluid_level": random.uniform(0.0, 100.0),
-    "fuel_level": random.uniform(0.0, 90.0),
+        "oil_level": random.uniform(0.0, 100.0),
+        "break_fluid_level": random.uniform(0.0, 100.0),
+        "fuel_level": random.uniform(0.0, 90.0),
 
-    "health": {
-        "engine": random.uniform(0.0, 100.0),
-        "breaks": random.uniform(0.0, 100.0),
-    },
+        "health": {
+            "engine": random.uniform(0.0, 100.0),
+            "breaks": random.uniform(0.0, 100.0),
+        },
 
-    "tire_pressure": random.uniform(0.0, 100.0),
+        "tire_pressure": random.uniform(0.0, 100.0),
 
-    "temperature": {
-        "engine": random.uniform(0.0, 100.0),
-        "car": random.uniform(0.0, 100.0),
-        "breaks": random.uniform(0.0, 100.0),
-        "tires": random.uniform(0.0, 100.0),
-    },
+        "temperature": {
+            "engine": random.uniform(0.0, 100.0),
+            "car": random.uniform(0.0, 100.0),
+            "breaks": random.uniform(0.0, 100.0),
+            "tires": random.uniform(0.0, 100.0),
+        },
 
-    "break_power": random.uniform(0.0, 100.0),
-    "break": bool(random.getrandbits(1)),
+        "break_power": random.uniform(0.0, 100.0),
+        "break": bool(random.getrandbits(1)),
 
-    "gas_power": random.uniform(0.0, 100.0),
-    "gas": bool(random.getrandbits(1)),
+        "gas_power": random.uniform(0.0, 100.0),
+        "gas": bool(random.getrandbits(1)),
 
-    "light": bool(random.getrandbits(1)),
-    "acc": random.uniform(0.0, 100.0),
-    "mph": random.uniform(0.0, 200.0),
-    "rpm": random.uniform(0.0, 10000),
-    "oxygen_level": random.uniform(0.0, 100.0),
-    "pos": {
-        "lat": random.uniform(38.0, 45.0),
-        "lon": random.uniform(-78.0, -123.0),
-    },
+        "light": bool(random.getrandbits(1)),
+        "acc": random.uniform(0.0, 100.0),
+        "mph": random.uniform(0.0, 200.0),
+        "rpm": random.uniform(0.0, 10000),
+        "oxygen_level": random.uniform(0.0, 100.0),
+        "pos": {
+            "lat": random.uniform(38.0, 45.0),
+            "lon": random.uniform(-78.0, -123.0),
+        },
 
-    "infotainment": {
-        "on": bool(random.getrandbits(1)),
-        "service": INFOTAINMENT_SERVICE[random.randrange(0, 3)],
-        "volume": random.uniform(0.0, 100.0)
+        "infotainment": {
+            "on": bool(random.getrandbits(1)),
+            "service": INFOTAINMENT_SERVICE[random.randrange(0, 3)],
+            "volume": random.uniform(0.0, 100.0)
+        }
     }
-}
 
-car_data_eu = {
-    "model": MODELS[random.randrange(0, 5)]["name"],
-    "labels": MODELS[random.randrange(0, 5)]["labels"],
-    "fuel": FUEL[random.randrange(0, 3)],
 
-    "kilometer_total":  random.uniform(2000.0, 100000.0),
-    "kilometer": random.uniform(0.0, 500.0),
-    "travel_time_total": random.randrange(0, 10000000000),
-    "travel_time": random.randrange(0, 500),
+def get_car_data_eu():
+    return {
+        "model": MODELS[random.randrange(0, 5)]["name"],
+        "labels": MODELS[random.randrange(0, 5)]["labels"],
+        "fuel": FUEL[random.randrange(0, 3)],
 
-    "oil_level": random.uniform(0.0, 100.0),
-    "break_fluid_level": random.uniform(0.0, 100.0),
-    "fuel_level": random.uniform(0.0, 90.0),
+        "kilometer_total":  random.uniform(2000.0, 100000.0),
+        "kilometer": random.uniform(0.0, 500.0),
+        "travel_time_total": random.randrange(0, 10000000000),
+        "travel_time": random.randrange(0, 500),
 
-    "engine": random.uniform(0.0, 100.0),
-    "breaks": random.uniform(0.0, 100.0),
+        "oil_level": random.uniform(0.0, 100.0),
+        "break_fluid_level": random.uniform(0.0, 100.0),
+        "fuel_level": random.uniform(0.0, 90.0),
 
-    "tire_pressure": random.uniform(0.0, 100.0),
-
-    "temperature": {
         "engine": random.uniform(0.0, 100.0),
-        "car": random.uniform(0.0, 100.0),
         "breaks": random.uniform(0.0, 100.0),
-        "tires": random.uniform(0.0, 100.0),
-    },
 
-    "break_power": random.uniform(0.0, 100.0),
-    "break": bool(random.getrandbits(1)),
+        "tire_pressure": random.uniform(0.0, 100.0),
 
-    "gas_power": random.uniform(0.0, 100.0),
-    "gas": bool(random.getrandbits(1)),
+        "temperature": {
+            "engine": random.uniform(0.0, 100.0),
+            "car": random.uniform(0.0, 100.0),
+            "breaks": random.uniform(0.0, 100.0),
+            "tires": random.uniform(0.0, 100.0),
+        },
 
-    "light": bool(random.getrandbits(1)),
-    "acc": random.uniform(0.0, 100.0),
-    "kmh": random.uniform(0.0, 200.0),
-    "rpm": random.uniform(0.0, 10000),
-    "oxygen_level": random.uniform(0.0, 100.0),
-    "pos": {
-        "lat": random.uniform(44.0, 54.0),
-        "lon":  random.uniform(-2.0, 30.0),
-    },
+        "break_power": random.uniform(0.0, 100.0),
+        "break": bool(random.getrandbits(1)),
 
-    "infotainment": {
-        "on": bool(random.getrandbits(1)),
-        "service": INFOTAINMENT_SERVICE[random.randrange(0, 3)],
-        "volume": random.uniform(0.0, 100.0)
+        "gas_power": random.uniform(0.0, 100.0),
+        "gas": bool(random.getrandbits(1)),
+
+        "light": bool(random.getrandbits(1)),
+        "acc": random.uniform(0.0, 100.0),
+        "kmh": random.uniform(0.0, 200.0),
+        "rpm": random.uniform(0.0, 10000),
+        "oxygen_level": random.uniform(0.0, 100.0),
+        "pos": {
+            "lat": random.uniform(44.0, 54.0),
+            "lon":  random.uniform(-2.0, 30.0),
+        },
+
+        "infotainment": {
+            "on": bool(random.getrandbits(1)),
+            "service": INFOTAINMENT_SERVICE[random.randrange(0, 3)],
+            "volume": random.uniform(0.0, 100.0)
+        }
     }
-}
+
 
 IDS = {
     0: "1a7a18f9-b795-4979-a2ca-dbe816fa43a3",

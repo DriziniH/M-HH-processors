@@ -39,10 +39,9 @@ def publish_infite(topic, car_id, region):
     key = {"region": region, "carId": car_id}
 
     if region == "EU":
-        data = ps.car_data_eu
+        data = ps.get_car_data_eu()
     elif region == "USA":
-        data = ps.car_data_usa
-    
+        data = ps.get_car_data_usa()
 
 
     while running:

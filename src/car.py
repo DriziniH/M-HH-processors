@@ -79,9 +79,10 @@ def start_car(amount, region, topic_produce, topic_consume):
 
     for i in range(amount):
         try:
-            car_id = p.IDS[amount]
-        except:
+            car_id = p.IDS[i]
+        except Exception as e:
             car_id = str(uuid.uuid4())
+
 
         #Producer
         Thread(target = producer.publish_infite, args = (topic_produce,car_id, region)).start()
