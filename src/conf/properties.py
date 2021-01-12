@@ -28,7 +28,13 @@ REGIONS = {
         c.ANALYZED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_ANALYZED\\",
         c.SCHEMAS: {
             c.SCHEMA_USA: SCHEMA[c.SCHEMA_USA],
-            #c.SCHEMA_EU: SCHEMA[c.SCHEMA_EU]
+            c.SCHEMA_EU: SCHEMA[c.SCHEMA_EU]
+        },
+        c.TOPICS: {
+            c.TOPIC_RAW: "car-usa",
+            #c.TOPIC_PROCESSED: "car-usa-processed",
+            c.TOPIC_INFO_CAR: "car-usa-info",
+            c.TOPIC_INFO_REGION: "region-usa-info"
         }
     },
 
@@ -41,6 +47,12 @@ REGIONS = {
         c.ANALYZED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_ANALYZED\\",
         c.SCHEMAS: {
             c.SCHEMA_EU: SCHEMA[c.SCHEMA_EU]
+        },
+        c.TOPICS: {
+            c.TOPIC_RAW: "car-eu",
+            #c.TOPIC_PROCESSED: "car-eu-processed",
+            c.TOPIC_INFO_CAR: "car-eu-info",
+            c.TOPIC_INFO_REGION: "region-eu-info"
         }
     },
 
@@ -53,6 +65,12 @@ REGIONS = {
         c.ANALYZED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_CHINA_ANALYZED\\",
         c.SCHEMAS: {
             c.SCHEMA_EU: SCHEMA[c.SCHEMA_EU]
+        },
+        c.TOPICS: {
+            c.TOPIC_RAW: "car-china",
+            #c.TOPIC_PROCESSED: "car-china-processed",
+            c.TOPIC_INFO_CAR: "car-china-info",
+            c.TOPIC_INFO_REGION: "region-china-info"
         }
     }
 }

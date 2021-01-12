@@ -46,9 +46,7 @@ def publish_infite(topic, car_id, region):
 
     while running:
 
-        timestamp = int(datetime.now().timestamp() * 1000)
-
-        producer.produce(topic, key=json.dumps(key).encode(), timestamp=timestamp,
+        producer.produce(topic, key=json.dumps(key).encode(),
                          value=json.dumps(data).encode(), callback=acked)
 
         # Wait up to 1 second for events. Callbacks will be invoked during

@@ -58,6 +58,14 @@ def process_data(metadata, region, data, data_base):
                 f"Failed to persist {c.PROCESSED} data to {region[c.PROCESSED]}!")
 
 
+def extract_region_from_topic(topic):
+    for region, dic in p.REGIONS.items():
+        for _, value in dic[c.TOPICS].items():
+            if topic == value:
+                return dic
+    return {}
+
+
 def extract_message(msg):
     """Extracts metadata information from message
 
@@ -78,10 +86,9 @@ def extract_message(msg):
 
         car_id = metadata["carId"]
 
-        region_string = metadata["region"]
-        if region_string not in p.REGIONS:
+        region = extract_region_from_topic(msg.topic())
+        if not region:
             raise Exception("Region not available!")
-        region = p.REGIONS[region_string]
 
         timestamp_millis = msg.timestamp()[1]
         dt = datetime.fromtimestamp(timestamp_millis/1000)
@@ -198,8 +205,4 @@ def consume_log(topics):
         consumer.close()
 
 
-# spark = SparkSession.builder.appName("Spark Session").getOrCreate()
-# # Enable Arrow-based columnar data transfers
-# spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
-
-consume_log(["car-usa", "car-eu"])
+consume_log(["car-usa", "car-eu"])  # , "car-usa-info" , "car-eu-info"

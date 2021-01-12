@@ -6,7 +6,7 @@ import json
 import ast
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 
-from src import producer 
+from src import producer
 from src import consumer
 from src.conf import properties_showcase as p
 
@@ -19,20 +19,30 @@ def json_to_dict(json_string):
             return ast.literal_eval(json_string)
         except Exception as ast_e:
             print("JSON ERROR: ", json_e)
-            print("AST ERROR: ",ast_e)
+            print("AST ERROR: ", ast_e)
             return {}
 
+
 running = True
+
 
 def shutdown():
     running = False
 
-def process_msg(msg):
-    metadata = json_to_dict(msg.key().decode('UTF-8'))
-    data = json_to_dict(msg.value().decode('UTF-8'))
+
+def process_msg(msg, car_id):
+    try:
+        key = msg.key().decode('UTF-8')
+        if car_id == key:
+            data = msg.value().decode('UTF-8')
+            if data:
+                print(f'ID: {car_id}')
+                print(f'Info: {data}')
+    except Exception as e:
+        pass  # print(e)
 
 
-def consume_log(topics):
+def consume_log(topics, car_id):
     """Infinitly reads kafka log from latest point
 
     Args:
@@ -64,7 +74,7 @@ def consume_log(topics):
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
-                process_msg(msg)
+                process_msg(msg, car_id)
 
     finally:
         # Close down consumer to commit final offsets.
@@ -72,10 +82,7 @@ def consume_log(topics):
         print("Thread stopped")
 
 
-
-
-
-def start_car(amount, region, topic_produce, topic_consume):
+def start_car(amount, region, topic_produce, topics_consume):
 
     for i in range(amount):
         try:
@@ -83,9 +90,9 @@ def start_car(amount, region, topic_produce, topic_consume):
         except Exception as e:
             car_id = str(uuid.uuid4())
 
+        # Producer
+        Thread(target=producer.publish_infite, args=(
+            topic_produce, car_id, region)).start()
 
-        #Producer
-        Thread(target = producer.publish_infite, args = (topic_produce,car_id, region)).start()
-
-        #Consumer
-        Thread(target = consume_log, args = ([topic_consume])).start()
+        # Consumer
+        Thread(target=consume_log, args=(topics_consume, car_id)).start()
