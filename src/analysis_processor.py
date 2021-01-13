@@ -1,6 +1,8 @@
 from src.conf import properties as p
 import src.utility.io as io
 import src.conf.constants as c
+from src.conf import properties_mongo as pm
+from src.utility.mongo_db import MongoDB
 
 import sys
 import ast
@@ -10,34 +12,10 @@ from datetime import datetime
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pandas as pd
-from pymongo import MongoClient
 
 
 running = True
-
-
-def connect_to_mongodb():
-    try:
-        mongo_connection = 'mongodb+srv://Hendrik:m-hh-mongo@eu-m-hh.fxa4u.mongodb.net/M-HH-analysis'
-        mongo_client = MongoClient(mongo_connection)
-
-        mongo_db = mongo_client["M-HH-analysis"]
-        print("Successfully connected to MongoDB!")
-        return mongo_db
-    except Exception as e:
-        print(e)
-        raise e
-
-
-def write_to_mongodb(data):
-    try:
-        # persist to db
-        for key, value in data.items():
-            result = regional_col.update_one(
-                {"_type": key}, {"$set": {"data": value}}, upsert=True)
-
-    except Exception as e:
-        print(e)
+mongo = MongoDB(pm.analysis_db_con, "M-HH-analysis")
 
 
 def extract_region_from_topic(topic):
@@ -101,19 +79,18 @@ def process_msg(msg):
         "timestamp": msg.timestamp(),
         "value": value
     }
-
     io.write_data(
         f'{region[c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
-    # decode and persist raw data
-    io.write_data(
-        f'{region[c.ANALYZED]}year={year}\\month={month}\\day={day}\\data', 'a', value)
-
-    # load data and enrich with time information
     data = json.loads(value)
+    data["timestamp"] = msg.timestamp()[1]
 
-    # persist to mongodb
-    write_to_mongodb(data)
+    # persist analyzed data
+    io.write_json_lines(
+        f'{region[c.ANALYZED]}year={year}\\month={month}\\day={day}\\car_analyzed.json', "a", data)
+
+    mongo.upsert_to_mongodb(mongo.get_collection(
+        "usa_analysis"), _id="_type", data=data)
 
 
 def shutdown():
@@ -159,6 +136,5 @@ def consume_log(topics):
         consumer.close()
 
 
-mongo_db = connect_to_mongodb()
-regional_col = mongo_db["usa_analysis"]
-consume_log(["region-usa-info"])
+def start_analysis_processor():
+    consume_log(["region-usa-info"])

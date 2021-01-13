@@ -36,8 +36,10 @@ def process_msg(msg, car_id):
         if car_id == key:
             data = msg.value().decode('UTF-8')
             if data:
-                print(f'ID: {car_id}')
-                print(f'Info: {data}')
+                #TODO PROCESS
+                # print(f'ID: {car_id}')
+                # print(f'Info: {data}')
+                pass
     except Exception as e:
         pass  # print(e)
 

@@ -4,6 +4,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pandas as pd
 from datetime import datetime
+import jsonlines
 
 
 def create_path(path):
@@ -17,6 +18,7 @@ def create_path(path):
             print(e)
             return False
 
+
 def write_data(path, mode, data):
     """Creates dirs if not existent and writes data in given mode
 
@@ -24,7 +26,7 @@ def write_data(path, mode, data):
         path (String): Path to write to
         mode (String): Write mode
         data (?): any file
-    
+
     Returns:
         Boolean: Write operation successfull or not
     """
@@ -41,6 +43,33 @@ def write_data(path, mode, data):
 
     #print(f"Write operation successfull. Path: {path}")
     return True
+
+
+def write_json_lines(path, mode, data):
+    try:
+        create_path(path)
+
+        with jsonlines.open(path, mode=mode) as writer:
+            writer.write(data)
+
+    except Exception as e:
+        print(str(e))
+        return False
+
+    #print(f"Write operation successfull. Path: {path}")
+    return True
+
+
+def read_json_lines(path):
+    data = []
+    try:
+        with jsonlines.open(path) as reader:
+            for obj in reader:
+                data.append(obj)
+    except Exception as e:
+        print(str(e))
+        return []
+    return data
 
 
 def read_partitioned_parquet_to_pandas(path):

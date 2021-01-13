@@ -1,29 +1,44 @@
 import json
-from src.schema_conversion_dict import convert_schema
-import src.utility.io as io
-import random
-import ast
-import uuid
+import jsonlines
+from src.utility import io
 from src.conf import properties_showcase as ps
-import pandas as pd
-import numpy
-from src.consumer import consume_log
-from pymongo import MongoClient
 
 
-mongo_connection = 'mongodb+srv://Hendrik:m-hh-mongo@eu-m-hh.fxa4u.mongodb.net/M-HH-analysis'
-mongo_client = MongoClient(mongo_connection)
+dataeu = {
+    "metadata": {
+        "region": "USA",
+        "carId": "41537170-b79c-49c8-ae09-d3345fea1231",
+        "schema": "SCHEMA_EU"
+    },
+    "data": ps.get_car_data_eu()
+}
 
-mongo_db = mongo_client["M-HH-analysis"]
+datausa = {
+    "metadata": {
+        "region": "USA",
+        "carId": "41537170-b79c-49c8-ae09-d3345fea1231",
+        "schema": "SCHEMA_EU"
+    },
+    "data": ps.get_car_data_usa()
+}
 
 
-regional_col = mongo_db["usa_analysis"]
+# io.write_json_lines(
+#     'C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\year=2021\\month=1\\day=13\\car.json', dataeu)
+# io.write_json_lines(
+#     'C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\year=2021\\month=1\\day=13\\car.json', datausa)
 
+data = []
+with jsonlines.open('C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\year=2021\\month=1\\day=13\\car.json') as reader:
+    for obj in reader:
+        data.append(obj)
 
-curr_analysis = regional_col.find({})
-    
-for document in curr_analysis:
-    print(document)
+# with open('C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\year=2021\\month=1\\day=13\\car.txt') as f:
+#     for line in f:
+#         try:
+#             print(line)
+#             data.append(json.loads(line))
+#         except:
+#             pass
 
-
-
+# print(data)

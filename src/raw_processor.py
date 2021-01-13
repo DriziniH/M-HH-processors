@@ -4,6 +4,8 @@ import src.utility.io as io
 import src.conf.constants as c
 from src.producer import publish
 from src.utility.dict_tools import flatten_json
+from src.conf import properties_mongo as pm
+from src.utility.mongo_db import MongoDB
 
 import sys
 import ast
@@ -14,6 +16,8 @@ import pandas as pd
 
 
 running = True
+
+mongo = MongoDB(pm.processed_db_con, "M-HH-car")
 
 
 def process_data(metadata, region, data, data_base):
@@ -38,19 +42,30 @@ def process_data(metadata, region, data, data_base):
 
         mapped_data = convert_schema(schema, data, data_base)
 
-        # TODO mehrere topics für analyse und daten oder metadaten?
-        metadata["type"] = "data"
+        # persist processed data to mongodb
+        # TODO this should be done by another script reading the processed topic and persisting it to mongodb
+        mongo.upsert_to_mongodb(mongo.get_collection("usa_car"),"carId", mapped_data["carId"], mapped_data)
+
+        # Add schema information for processed data
+        metadata["schema"] = key
 
         publish(value[c.SCHEMA_TOPIC], key=metadata,
                 data=mapped_data)
 
-        # persist processed data as parquet
-        flatten = flatten_json(mapped_data)
-        pdf = pd.DataFrame(flatten, index=[0])
+        processed_data = {
+            "metadata": metadata,
+            "data": mapped_data
+        }
 
-        if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PROCESSED], ["year", "month", "day"]):
-            print(
-                f"Failed to persist {c.PROCESSED} data to {region[c.PROCESSED]}!")
+        io.write_json_lines(
+            f'{region[c.PROCESSED]}year={mapped_data["year"]}\\month={mapped_data["month"]}\\day={mapped_data["day"]}\\car.json', "a", processed_data)
+
+        # persist processed data as parquet
+        #flatten = flatten_json(mapped_data)
+        # pdf = pd.DataFrame(flatten, index=[0])
+        # if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PROCESSED], ["year", "month", "day"]):
+        #     print(
+        #         f"Failed to persist {c.PROCESSED} data to {region[c.PROCESSED]}!")
 
 
 def extract_region_from_topic(topic):
@@ -121,19 +136,23 @@ def process_msg(msg):
         "value": value
     }
 
+    # load data and enrich with time information
+    data = json.loads(value)
+
     io.write_data(
         f'{region[c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
-    # decode and persist raw data
-    io.write_data(
-        f'{region[c.RAW]}year={year}\\month={month}\\day={day}\\data', 'a', json.dumps({key: value}))
+    # persist raw data
+    raw_data = {
+        "metadata": metadata,
+        "data": data
+    }
+    io.write_json_lines(
+        f'{region[c.RAW]}year={year}\\month={month}\\day={day}\\car.json', "a", raw_data)
 
     # create pandas df with time information
     pdf = pd.DataFrame([[car_id, timestamp_millis, year, month, day]],
                        columns=["carId", "timestamp", "year", "month", "day"])
-
-    # load data and enrich with time information
-    data = json.loads(value)
 
     # flatten values for columnar format and schema conversion
     data = flatten_json(data)
@@ -149,10 +168,10 @@ def process_msg(msg):
     data.update(data_base)
 
     # persist preprocessed data as parquet
-    pdf = pd.DataFrame.from_dict(data)
-    if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PREPROCESSED], ["year", "month", "day"]):
-        print(
-            f"Failed to persist {c.PREPROCESSED} data to {region[c.PREPROCESSED]}!")
+    # pdf = pd.DataFrame.from_dict(data)
+    # if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PREPROCESSED], ["year", "month", "day"]):
+    #     print(
+    #         f"Failed to persist {c.PREPROCESSED} data to {region[c.PREPROCESSED]}!")
 
     process_data(metadata, region, data, data_base)
 
@@ -199,5 +218,5 @@ def consume_log(topics):
         # Close down consumer to commit final offsets.
         consumer.close()
 
-
-consume_log(["car-usa", "car-eu"])  # , "car-usa-info" , "car-eu-info"
+def start_raw_processor():
+    consume_log(["car-usa"])
