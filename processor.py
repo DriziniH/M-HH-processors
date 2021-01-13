@@ -1,20 +1,15 @@
-import sys
-import ast
-import json
-
-from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from src.conf import properties as p
-from datetime import datetime
-
-#from src.schema_conversion import convert_schema
 from src.schema_conversion_dict import convert_schema
 import src.utility.io as io
 import src.conf.constants as c
 from src.producer import publish
 from src.utility.dict_tools import flatten_json
 
-import pyarrow as pa
-import pyarrow.parquet as pq
+import sys
+import ast
+import json
+from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
+from datetime import datetime
 import pandas as pd
 
 
@@ -49,7 +44,7 @@ def process_data(metadata, region, data, data_base):
         publish(value[c.SCHEMA_TOPIC], key=metadata,
                 data=mapped_data)
 
-        # persist processed data as parquet #TODO how is nested data optimally persisted in parquet
+        # persist processed data as parquet
         flatten = flatten_json(mapped_data)
         pdf = pd.DataFrame(flatten, index=[0])
 
@@ -73,7 +68,7 @@ def extract_message(msg):
         metadata (dict): metadata from message
 
     Raises:
-        Exception: Failure information while extraciting data
+        Exception: Failure information while extracting data
 
     Returns:
         tuple: metadata
@@ -127,7 +122,7 @@ def process_msg(msg):
     }
 
     io.write_data(
-        f'{region[c.RAW_EVENTS]}year={year}\month={month}\day={day}\events', 'a', json.dumps(event))
+        f'{region[c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
     # decode and persist raw data
     io.write_data(

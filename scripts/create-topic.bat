@@ -1,1 +1,1 @@
-C:\Showcase\kafka\bin\windows\kafka-topics --create --topic car-eu-info --bootstrap-server localhost:9092
+C:\Showcase\kafka\bin\windows\kafka-topics --create --topic region-eu-info --bootstrap-server localhost:9092
