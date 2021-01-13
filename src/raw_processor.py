@@ -52,13 +52,8 @@ def process_data(metadata, region, data, data_base):
         publish(value[c.SCHEMA_TOPIC], key=metadata,
                 data=mapped_data)
 
-        processed_data = {
-            "metadata": metadata,
-            "data": mapped_data
-        }
-
         io.write_json_lines(
-            f'{region[c.PROCESSED]}year={mapped_data["year"]}\\month={mapped_data["month"]}\\day={mapped_data["day"]}\\car.json', "a", processed_data)
+            f'{region[c.PROCESSED]}year={mapped_data["year"]}\\month={mapped_data["month"]}\\day={mapped_data["day"]}\\car.json', "a", mapped_data)
 
         # persist processed data as parquet
         #flatten = flatten_json(mapped_data)
