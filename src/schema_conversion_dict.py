@@ -3,7 +3,6 @@ import json
 import ast
 import numpy as np
 import pandas as pd
-from datetime import datetime
 
 type_conversion = {
     "str": str,
@@ -66,7 +65,7 @@ def map_field(data_raw, field):
     return data
 
 
-def convert_schema(schema, data_raw, data = {}):
+def convert_schema(schema, data_raw, data):
     """Takes fields from json schema and recursivly maps raw data to schematised dict
 
     Args:
@@ -121,6 +120,7 @@ def convert_schema(schema, data_raw, data = {}):
 
     # initialize array with row length from raw data and column length of schema
 
+    
     for field in schema["fields"]:
         data.update(resolve_subtype(field, data_raw, data))
 

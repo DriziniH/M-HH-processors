@@ -20,7 +20,7 @@ running = True
 mongo = MongoDB(pm.processed_db_con, "M-HH-car")
 
 
-def process_data(metadata, region, data, data_base):
+def process_data(metadata, data, msg):
     """
     Reads schemas from properties
     Creates mapped data based on all schemas from given region 
@@ -29,38 +29,44 @@ def process_data(metadata, region, data, data_base):
 
     Args:
         metadata (dict): message metadata
-        region (dict): region with schema information
         data (dict): car data
         data_base (dict) : base data with car id and time information
 
     """
+    region = metadata["region"]
+    topic = region[c.TOPICS][c.TOPIC_PROCESSED]
 
     for key, value in region[c.SCHEMAS].items():
+
+        
+
         # read schema and convert to struct
-        with open(value[c.SCHEMA_PATH]) as f:
+        with open(value) as f:
             schema = json.load(f)
+
+        data_base = {
+            "timestamp": metadata["timestamp"],
+            "schema": key
+        }
 
         mapped_data = convert_schema(schema, data, data_base)
 
-        # persist processed data to mongodb
-        # TODO this should be done by another script reading the processed topic and persisting it to mongodb
-        mongo.upsert_to_mongodb(mongo.get_collection("usa_car"),"carId", mapped_data["carId"], mapped_data)
-
         # Add schema information for processed data
-        metadata["schema"] = key
-
-        publish(value[c.SCHEMA_TOPIC], key=metadata,
-                data=mapped_data)
+        new_key = {
+            "schema": key,
+            "carId": metadata["carId"]
+        }
 
         io.write_json_lines(
-            f'{region[c.PROCESSED]}year={mapped_data["year"]}\\month={mapped_data["month"]}\\day={mapped_data["day"]}\\car.json', "a", mapped_data)
+            f'{region[c.PROCESSED]}year={metadata["datetime"].year}\\month={metadata["datetime"].month}\\day={metadata["datetime"].day}\\{topic}.json', "a", mapped_data)
 
-        # persist processed data as parquet
-        #flatten = flatten_json(mapped_data)
-        # pdf = pd.DataFrame(flatten, index=[0])
-        # if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PROCESSED], ["year", "month", "day"]):
-        #     print(
-        #         f"Failed to persist {c.PROCESSED} data to {region[c.PROCESSED]}!")
+        publish(topic, key=new_key,
+                data=mapped_data)
+
+        # persist processed data to mongodb
+        # TODO this should be done by another script reading the processed topic and persisting it to mongodb
+        mongo.upsert_to_mongodb(col=mongo.get_collection(
+            "usa_car"), _id={"carId": metadata["carId"], "schema": key}, data=mapped_data)
 
 
 def extract_region_from_topic(topic):
@@ -98,7 +104,11 @@ def extract_message(msg):
         timestamp_millis = msg.timestamp()[1]
         dt = datetime.fromtimestamp(timestamp_millis/1000)
 
-        return key, value, metadata, region, timestamp_millis, dt, car_id
+        metadata["timestamp"] = timestamp_millis
+        metadata["datetime"] = dt
+        metadata["region"] = region
+
+        return key, value, metadata
 
     except Exception as e:
         print(e)
@@ -113,10 +123,11 @@ def process_msg(msg):
         msg (kafka message): kafka message
     """
 
-    key, value, metadata, region, timestamp_millis, dt, car_id = extract_message(
+    key, value, metadata = extract_message(
         msg)
 
     # time data
+    dt = metadata["datetime"]
     day = dt.day
     month = dt.month
     year = dt.year
@@ -131,44 +142,19 @@ def process_msg(msg):
         "value": value
     }
 
-    # load data and enrich with time information
-    data = json.loads(value)
-
+    region = metadata["region"]
     io.write_data(
         f'{region[c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
-    # persist raw data
-    raw_data = {
-        "metadata": metadata,
-        "data": data
-    }
-    io.write_json_lines(
-        f'{region[c.RAW]}year={year}\\month={month}\\day={day}\\car.json', "a", raw_data)
+    data = json.loads(value)
 
-    # create pandas df with time information
-    pdf = pd.DataFrame([[car_id, timestamp_millis, year, month, day]],
-                       columns=["carId", "timestamp", "year", "month", "day"])
+    io.write_json_lines(
+        f'{region[c.RAW]}year={year}\\month={month}\\day={day}\\{msg.topic()}.json', "a", data)
 
     # flatten values for columnar format and schema conversion
     data = flatten_json(data)
 
-    data_base = {
-        "carId": car_id,
-        "timestamp": timestamp_millis,
-        "year": year,
-        "month": month,
-        "day": day
-    }
-
-    data.update(data_base)
-
-    # persist preprocessed data as parquet
-    # pdf = pd.DataFrame.from_dict(data)
-    # if not io.write_partitioned_parquet_from_pandas(pdf, region[c.PREPROCESSED], ["year", "month", "day"]):
-    #     print(
-    #         f"Failed to persist {c.PREPROCESSED} data to {region[c.PREPROCESSED]}!")
-
-    process_data(metadata, region, data, data_base)
+    process_data(metadata, data, msg)
 
 
 def shutdown():
@@ -212,6 +198,7 @@ def consume_log(topics):
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()
+
 
 def start_raw_processor():
     consume_log(["car-usa"])

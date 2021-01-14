@@ -1,0 +1,284 @@
+{
+    "name": "schema_eu",
+    "file_origin": [
+        {
+            "name": "car_data",
+            "path": "processed/car.json",
+            "type": "json"
+        },
+        {
+            "name": "raw_data",
+            "path": "raw/car.parquet",
+            "type": "parquet"
+        },
+        {
+            "name": "custom_file",
+            "path": "raw/data.csv",
+            "type": "csv"
+        }
+    ],
+    "fields": [
+        {
+            "name": "model",
+            "type": "str",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "fuel",
+            "type": "str",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "km",
+            "type": "dict",
+            "nullable": false,
+            "metadata": {},
+            "fields": [
+                {
+                    "name": "km_total",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "kilometer_total"
+                    }
+                },
+                {
+                    "name": "km_drive",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "kilometer"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "time",
+            "type": "dict",
+            "nullable": false,
+            "metadata": {},
+            "fields": [
+                {
+                    "name": "time_total",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "travel_time_total"
+                    }
+                },
+                {
+                    "name": "time_drive",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "travel_time"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "levels",
+            "type": "dict",
+            "nullable": false,
+            "metadata": {},
+            "fields": [
+                {
+                    "name": "oil_level",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "fuel_level",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "break_fluid_level",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                }
+            ]
+        },
+        {
+            "name": "health",
+            "type": "dict",
+            "nullable": false,
+            "metadata": {},
+            "fields": [
+                {
+                    "name": "engine",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "breaks",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                }
+            ]
+        },
+        {
+            "name": "tire_pressure",
+            "type": "float",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "temperature",
+            "type": "dict",
+            "nullable": false,
+            "metadata": {},
+            "fields": [
+                {
+                    "name": "engine",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "temperature.engine"
+                    }
+                },
+                {
+                    "name": "car",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "temperature.car"
+                    }
+                },
+                {
+                    "name": "breaks",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "temperature.breaks"
+                    }
+                },
+                {
+                    "name": "tires",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "temperature.tires"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "break_power",
+            "type": "float",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "break",
+            "type": "bool",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "gas_power",
+            "type": "float",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "gas",
+            "type": "bool",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "light",
+            "type": "bool",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "acc",
+            "type": "float",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "mph",
+            "type": "float",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "rpm",
+            "type": "float",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "oxygen_level",
+            "type": "float",
+            "nullable": false,
+            "metadata": {}
+        },
+        {
+            "name": "pos",
+            "type": "dict",
+            "nullable": false,
+            "metadata": {},
+            "fields": [
+                {
+                    "name": "lat",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "pos.lat"
+                    }
+                },
+                {
+                    "name": "lon",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "pos.lon"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "infotainment",
+            "type": "dict",
+            "nullable": false,
+            "metadata": {},
+            "fields": [
+                {
+                    "name": "on",
+                    "type": "bool",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "infotainment.on"
+                    }
+                },
+                {
+                    "name": "service",
+                    "type": "str",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "infotainment.service"
+                    }
+                },
+                {
+                    "name": "volume",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {
+                        "corr_field": "infotainment.volume"
+                    }
+                }
+            ]
+        }
+    ]
+}

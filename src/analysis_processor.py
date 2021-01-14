@@ -55,7 +55,7 @@ def extract_message(msg):
         return None
 
 
-def process_msg(msg):
+def process_msg(msg, upsert):
     """Reads message, persists events, raw data and clean data as dataframe in parquet
     schematizes and publishes data for all schemas
 
@@ -87,10 +87,11 @@ def process_msg(msg):
 
     # persist analyzed data
     io.write_json_lines(
-        f'{region[c.ANALYZED]}year={year}\\month={month}\\day={day}\\car_analyzed.json', "a", data)
+        f'{region[c.ANALYZED]}year={year}\\month={month}\\day={day}\\{msg.topic()}.json', "a", data)
 
-    mongo.upsert_to_mongodb(mongo.get_collection(
-        "usa_analysis"), _id="_type", data=data)
+    if upsert:
+        mongo.upsert_to_mongodb(col=mongo.get_collection(
+            "usa_analysis"), _id = "type", data=data)
 
 
 def shutdown():
@@ -129,7 +130,8 @@ def consume_log(topics):
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
-                process_msg(msg)
+                if "region" in msg.topic():
+                    process_msg(msg, True)
 
     finally:
         # Close down consumer to commit final offsets.
@@ -137,4 +139,4 @@ def consume_log(topics):
 
 
 def start_analysis_processor():
-    consume_log(["region-usa-info"])
+    consume_log(["region-usa-info", "car-usa-info"])
