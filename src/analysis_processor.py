@@ -15,7 +15,7 @@ import pandas as pd
 
 
 running = True
-mongo = MongoDB(pm.analysis_db_con, "M-HH-analysis")
+mongo = None
 
 
 def extract_region_from_topic(topic):
@@ -145,4 +145,5 @@ def consume_log(topics):
 
 
 def start_analysis_processor():
+    mongo = MongoDB(pm.analysis_db_con, "M-HH-analysis")
     consume_log(["car-usa-info", "region-usa-info"]) #TODO car-usa-info isnt read (null messages), despite data coming in (tested)

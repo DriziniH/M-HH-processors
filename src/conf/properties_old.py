@@ -21,7 +21,7 @@ REGIONS = {
             c.TOPIC_INFO_CAR: "car-usa-info",
             c.TOPIC_INFO_REGION: "region-usa-info"
         },
-        c.COL_CAR: "usa_car"
+        c.DB_NAME: "M-HH-USA"
     },
 
     # EU Properties
@@ -39,7 +39,7 @@ REGIONS = {
             c.TOPIC_INFO_CAR: "car-eu-info",
             c.TOPIC_INFO_REGION: "region-eu-info"
         },
-        c.COL_CAR: "eu_car"
+        c.DB_NAME: "M-HH-EU"
     },
 
     # CHINA Properties
@@ -57,6 +57,13 @@ REGIONS = {
             c.TOPIC_INFO_CAR: "car-china-info",
             c.TOPIC_INFO_REGION: "region-china-info"
         },
-        c.COL_CAR: "china_car"
+        c.DB_NAME: "M-HH-CHINA"
     }
+}
+
+c.DB_COLS: {
+    c.RAW: "raw",
+    c.PROCESSED: "processed",
+    c.ANALYZED: "analysis",
+    c.ANALYZED_CAR: "analysis_car"
 }
