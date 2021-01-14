@@ -1,9 +1,6 @@
 import sys
 import ast
 import json
-
-from src.conf import properties as p
-
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from datetime import datetime
 

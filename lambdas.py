@@ -1,12 +1,18 @@
+from src.processor import start_processor
+from src.conf import properties_eu, properties_usa
+from src.conf import constants as c
+from src.conf import properties_mongo as pm
+
 from threading import Thread
 
-from src.raw_processor import start_raw_processor
-from src.analysis_processor import start_analysis_processor
-from src.conf import properties_eu, properties_usa
 
+conf_eu = properties_eu.CONF
+conf_usa = properties_usa.CONF
 
+Thread(target=start_processor, args=(
+    conf_eu, [conf_eu[c.TOPICS][c.TOPIC_RAW]], pm.db_con_eu,"raw")).start()
 
-Thread(target=start_raw_processor, args=(properties_eu.CONF)).start()
-Thread(target=start_raw_processor, args=(properties_usa.CONF)).start()
-
-Thread(target=start_analysis_processor, args=(properties_usa.conf)).start()
+Thread(target=start_processor, args=(
+    conf_usa, [conf_usa[c.TOPICS][c.TOPIC_RAW]], pm.db_con_usa,"raw")).start()
+# Thread(target=start_processor, args=(
+#     conf_usa, [conf_usa[c.TOPICS][c.TOPIC_INFO_REGION]], pm.db_con_usa,,"analysis")).start()

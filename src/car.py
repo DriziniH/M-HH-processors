@@ -8,8 +8,7 @@ from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 
 from src import producer
 from src import consumer
-from src.conf import properties_showcase as p
-
+from src.conf import properties_showcase as ps
 
 
 running = True
@@ -25,7 +24,7 @@ def process_msg(msg, car_id):
         if car_id == key:
             data = msg.value().decode('UTF-8')
             if data:
-                #TODO PROCESS
+                # TODO PROCESS
                 # print(f'ID: {car_id}')
                 # print(f'Info: {data}')
                 pass
@@ -77,13 +76,20 @@ def start_car(amount, region, topic_produce, topics_consume):
 
     for i in range(amount):
         try:
-            car_id = p.IDS[i]
+            car_id = ps.IDS[i]
         except Exception as e:
             car_id = str(uuid.uuid4())
 
+        key = {"region": region, "id": car_id, "origin": "car"}
+
+        if region == "EU":
+            data = ps.get_car_data_eu()
+        elif region == "USA":
+            data = ps.get_car_data_usa()
+
         # Producer
         Thread(target=producer.publish_infite, args=(
-            topic_produce, car_id, region)).start()
+            topic_produce, key, data)).start()
 
         # Consumer
         Thread(target=consume_log, args=(topics_consume, car_id)).start()

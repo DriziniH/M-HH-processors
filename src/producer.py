@@ -8,8 +8,6 @@ import uuid
 import time
 import random
 
-from src.conf import properties_showcase as ps
-
 
 running = True
 
@@ -24,7 +22,7 @@ def acked(err, msg):
         pass
 
 
-def publish_infite(topic, car_id, region):
+def publish_infite(topic, key, data):
     """Publishes infinitly on given topic with random generated key and values
 
     Args:
@@ -36,16 +34,8 @@ def publish_infite(topic, car_id, region):
 
     producer = Producer(conf)
 
-    key = {"region": region, "carId": car_id}
-
-    if region == "EU":
-        data = ps.get_car_data_eu()
-    elif region == "USA":
-        data = ps.get_car_data_usa()
-
-
     while running:
-
+        
         producer.produce(topic, key=json.dumps(key).encode(),
                          value=json.dumps(data).encode(), callback=acked)
 
