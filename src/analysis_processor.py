@@ -39,7 +39,10 @@ def extract_message(msg):
         tuple: metadata
     """
     try:
+        key = msg.key().decode('UTF-8')
         value = msg.value().decode('UTF-8')
+
+        info_type = json.loads(key)
 
         region = extract_region_from_topic(msg.topic())
         if not region:
@@ -48,7 +51,7 @@ def extract_message(msg):
         timestamp_millis = msg.timestamp()[1]
         dt = datetime.fromtimestamp(timestamp_millis/1000)
 
-        return value, region, timestamp_millis, dt
+        return info_type, value, region, timestamp_millis, dt
 
     except Exception as e:
         print(e)
@@ -63,7 +66,7 @@ def process_msg(msg, upsert):
         msg (kafka message): kafka message
     """
 
-    value, region, timestamp_millis, dt = extract_message(
+    info_type, value, region, timestamp_millis, dt = extract_message(
         msg)
 
     # time data
@@ -91,7 +94,7 @@ def process_msg(msg, upsert):
 
     if upsert:
         mongo.upsert_to_mongodb(col=mongo.get_collection(
-            "usa_analysis"), _id = "type", data=data)
+            "usa_analysis"), _id=info_type, data={"data":data}, mode= "$push")
 
 
 def shutdown():
@@ -130,8 +133,11 @@ def consume_log(topics):
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
+                #only write to mongodb with region analysis data
                 if "region" in msg.topic():
                     process_msg(msg, True)
+                else:
+                    process_msg(msg, False)
 
     finally:
         # Close down consumer to commit final offsets.
@@ -139,4 +145,4 @@ def consume_log(topics):
 
 
 def start_analysis_processor():
-    consume_log(["region-usa-info", "car-usa-info"])
+    consume_log(["car-usa-info", "region-usa-info"]) #TODO car-usa-info isnt read (null messages), despite data coming in (tested)

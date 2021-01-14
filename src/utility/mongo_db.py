@@ -26,23 +26,22 @@ class MongoDB():
             print(e)
             raise e
 
-    def upsert_to_mongodb(self, col, _id = None, data = None):
+    def upsert_to_mongodb(self, col, _id=None, data=None, mode="$set"):
         """Writes or updates data for a document with a given id
-        Searches for the id or the combination of a string and the data from the dict
 
         Args:
             col (mongodb collection):
-            id (dict or String): key value pairs or String with field name
-            data (dict)
+            id (dict): key value pairs
+            data (dict or list): nested data or array
+            mode (String): operator
+
+        Returns bool: Operation successfully
         """
         try:
             for key, value in data.items():
-                if type(_id) is dict:
-                    result = col.update_one(
-                        _id, {"$set":  {key: value}}, upsert=True)
-                else:
-                    col.update_one(
-                        {_id : key}, {"$set":  {"data": value}}, upsert=True)
+                col.update_one(
+                    _id, {mode:  {key: value}}, upsert=True)
+
             return True
 
         except Exception as e:
