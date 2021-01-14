@@ -1,5 +1,6 @@
+from src import constants as c
+
 from enum import Enum
-import src.conf.constants as c
 import uuid
 
 
@@ -19,7 +20,8 @@ REGIONS = {
             c.TOPIC_PROCESSED: "car-usa-processed",
             c.TOPIC_INFO_CAR: "car-usa-info",
             c.TOPIC_INFO_REGION: "region-usa-info"
-        }
+        },
+        c.COL_CAR: "usa_car"
     },
 
     # EU Properties
@@ -36,7 +38,8 @@ REGIONS = {
             c.TOPIC_PROCESSED: "car-eu-processed",
             c.TOPIC_INFO_CAR: "car-eu-info",
             c.TOPIC_INFO_REGION: "region-eu-info"
-        }
+        },
+        c.COL_CAR: "eu_car"
     },
 
     # CHINA Properties
@@ -53,6 +56,7 @@ REGIONS = {
             c.TOPIC_PROCESSED: "car-china-processed",
             c.TOPIC_INFO_CAR: "car-china-info",
             c.TOPIC_INFO_REGION: "region-china-info"
-        }
+        },
+        c.COL_CAR: "china_car"
     }
 }

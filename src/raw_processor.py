@@ -3,12 +3,11 @@ from src.schema_conversion_dict import convert_schema
 import src.utility.io as io
 import src.conf.constants as c
 from src.producer import publish
-from src.utility.dict_tools import flatten_json
+from src.utility  import dict_tools
 from src.conf import properties_mongo as pm
 from src.utility.mongo_db import MongoDB
 
 import sys
-import ast
 import json
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from datetime import datetime
@@ -42,7 +41,7 @@ def process_data(metadata, data, msg):
 
         # read schema and convert to struct
         with open(value) as f:
-            schema = json.load(f)
+            schema = dict_tools.load_json_to_dict(f)
 
         data_base = {
             "timestamp": metadata["timestamp"],
@@ -93,7 +92,7 @@ def extract_message(msg):
         key = msg.key().decode('UTF-8')
         value = msg.value().decode('UTF-8')
 
-        metadata = json.loads(msg.key())
+        metadata = dict_tools.load_json_to_dict(msg.key())
 
         car_id = metadata["carId"]
 
@@ -146,13 +145,13 @@ def process_msg(msg):
     io.write_data(
         f'{region[c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
-    data = json.loads(value)
+    data = dict_tools.load_json_to_dict(value)
 
     io.write_json_lines(
         f'{region[c.RAW]}year={year}\\month={month}\\day={day}\\{msg.topic()}.json', "a", data)
 
     # flatten values for columnar format and schema conversion
-    data = flatten_json(data)
+    data = dict_tools.flatten_json(data)
 
     process_data(metadata, data, msg)
 

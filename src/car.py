@@ -11,17 +11,6 @@ from src import consumer
 from src.conf import properties_showcase as p
 
 
-def json_to_dict(json_string):
-    try:
-        return json.loads(json_string)
-    except Exception as json_e:
-        try:
-            return ast.literal_eval(json_string)
-        except Exception as ast_e:
-            print("JSON ERROR: ", json_e)
-            print("AST ERROR: ", ast_e)
-            return {}
-
 
 running = True
 

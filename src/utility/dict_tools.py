@@ -1,5 +1,5 @@
 import json
-
+import ast
 
 def recursive_extraction(data):
     """Recusivly adds all data and types from data to json string
@@ -32,6 +32,17 @@ def recursive_extraction(data):
 
     return schema
 
+
+def load_json_to_dict(json_string):
+    try:
+        return json.loads(json_string)
+    except Exception as json_e:
+        try:
+            return ast.literal_eval(json_string)
+        except Exception as ast_e:
+            print("JSON ERROR: ", json_e)
+            print("AST ERROR: ", ast_e)
+            return {}
 
 def extract_schema(name, data):
     """Takes data from a dict and extracts it data and types to another dict
