@@ -43,6 +43,57 @@ def extract_message(msg):
         return None
 
 
+def get_params_from_processor_type(processor, metadata, data, msg):
+    """Takes information about current processor (raw or analysis) and returns tuple with information and data
+
+    Args:
+        processor (dict): objects of processor
+        metadata (dict)
+        data (dict)
+        timestamp (int):
+
+    Returns:
+        data[dict]: enriched data
+        _id[dict]: if fields for mongo db update
+        dl_path[String]: Data lake path where data is persisted
+        db_col[MongoDB Collection]: Collection where data is updated
+        mode[String]: Mode how data is updated to MongoDB
+    """
+
+    paths = processor["conf"][c.DL_PATHS]
+    db_cols = processor["conf"][c.DB_COLS]
+    topics = processor["conf"][c.TOPICS]
+    mongo_db = processor["mongo_db"]
+
+    data["timestamp"] = msg.timestamp()[1]
+
+    if processor["proc_type"] == "raw":
+
+        data["origin"] = metadata["origin"]
+        data["id"] = metadata["id"]
+
+        _id = {
+            "_id": data["id"],
+            "_origin":  data["origin"]
+        }
+        
+        dl_path = paths[c.PROCESSED]
+        db_col = mongo_db.get_collection(db_cols[c.PROCESSED])
+        mode = "$set"
+
+    elif processor["proc_type"] == "analysis":
+        _id = {"type": metadata["type"]}
+        db_col = mongo_db.get_collection(db_cols[c.ANALYZED_REGION])
+        mode = "$push"
+
+        if msg.topic() == topics[c.TOPIC_INFO_CAR]:
+            dl_path = paths[c.ANALYZED_CAR]
+        elif msg.topic() == topics[c.TOPIC_INFO_REGION]:
+            dl_path = paths[c.ANALYZED_REGION]
+
+    return data, _id, dl_path, db_col, mode
+
+
 def process_msg(msg, processor):
     """
     Extracts and decodes message
@@ -84,37 +135,19 @@ def process_msg(msg, processor):
         f'{dl_paths[c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
     data = dict_tools.load_json_to_dict(value)
-    data["id"] = metadata["_id"]  # TODO "id"
-    data["origin"] = metadata["origin"]
-    data["timestamp"] = msg.timestamp()[1]
 
-    if proc_type == "raw":
-        path = dl_paths[c.PROCESSED]
-    elif proc_type == "analysis":
-        path = dl_paths[c.ANALYZED]
+    data, _id, dl_path, db_col, mode = get_params_from_processor_type(
+        processor, metadata, data, msg)
 
     io.write_json_lines(
-        f'{dl_paths[c.PROCESSED]}year={year}\\month={month}\\day={day}\\{msg.topic()}.json', "a", data)
+        f'{dl_path}year={year}\\month={month}\\day={day}\\{msg.topic()}.json', "a", data)
 
-    # dont write car analysis data
-    if msg.topic() != topics[c.TOPIC_INFO_CAR]:
+    if msg.topic() != topics[c.TOPIC_INFO_CAR]:  # dont write car analysis data
 
-        db_cols = region_conf[c.DB_COLS]
+        if proc_type == "analysis":
+            data = {"data": data}
 
-        if proc_type == "raw":
-
-            _id = {
-                "_id": metadata["_id"], #TODO "id"
-                "_origin":  metadata["origin"]
-            }
-
-            mongo_db.upsert_to_mongodb(col=mongo_db.get_collection(
-                db_cols[c.PROCESSED]), _id=_id, data=data)
-
-        elif proc_type == "analysis":
-
-            mongo_db.upsert_to_mongodb(col=mongo_db.get_collection(
-                db_cols[c.PROCESSED]), _id={metadata["info_type"]}, data={"data": data}, mode="$push")
+        mongo_db.upsert_to_mongodb(col=db_col, _id=_id, data=data, mode=mode)
 
 
 def shutdown():

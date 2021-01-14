@@ -14,5 +14,5 @@ Thread(target=start_processor, args=(
 
 Thread(target=start_processor, args=(
     conf_usa, [conf_usa[c.TOPICS][c.TOPIC_RAW]], pm.db_con_usa,"raw")).start()
-# Thread(target=start_processor, args=(
-#     conf_usa, [conf_usa[c.TOPICS][c.TOPIC_INFO_REGION]], pm.db_con_usa,,"analysis")).start()
+Thread(target=start_processor, args=(
+    conf_usa, [conf_usa[c.TOPICS][c.TOPIC_INFO_REGION],conf_usa[c.TOPICS][c.TOPIC_INFO_CAR]], pm.db_con_usa,"analysis")).start()

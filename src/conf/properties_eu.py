@@ -11,7 +11,8 @@ CONF = {
         c.RAW_EVENTS: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_RAW_EVENTS\\CAR\\",
         c.RAW: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_RAW\\CAR\\",
         c.PROCESSED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_PROCESSED\\CAR\\",
-        c.ANALYZED: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_ANALYZED\\CAR\\"
+        c.ANALYZED_CAR: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_ANALYZED\\CAR\\",
+        c.ANALYZED_REGION: "C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_EU_ANALYZED\\REGION\\"
     },
     # Available schemas
     c.SCHEMAS: {
@@ -29,7 +30,6 @@ CONF = {
     c.DB_NAME: "M-HH-EU",
     c.DB_COLS: {
         c.PROCESSED: "processed",
-        c.ANALYZED: "analysis",
-        c.ANALYZED_CAR: "analysis_car"
+        c.ANALYZED_REGION: "analysis"
     }
 }
