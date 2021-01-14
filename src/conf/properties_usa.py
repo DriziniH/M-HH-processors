@@ -1,4 +1,4 @@
-from src.conf import constants as c
+from src import constants as c
 
 from enum import Enum
 import uuid

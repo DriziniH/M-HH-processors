@@ -1,6 +1,6 @@
 from src.processor import start_processor
 from src.conf import properties_eu, properties_usa
-from src.conf import constants as c
+from src import constants as c
 from src.conf import properties_mongo as pm
 
 from threading import Thread

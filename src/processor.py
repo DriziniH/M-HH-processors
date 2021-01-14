@@ -1,5 +1,5 @@
 import src.utility.io as io
-import src.conf.constants as c
+import src.constants as c
 from src.utility import dict_tools
 from src.utility.mongo_db import MongoDB
 
@@ -68,15 +68,16 @@ def get_params_from_processor_type(processor, metadata, data, msg):
     data["timestamp"] = msg.timestamp()[1]
 
     if processor["proc_type"] == "raw":
-
-        data["origin"] = metadata["origin"]
-        data["id"] = metadata["id"]
+        try:
+            data["origin"] = metadata["origin"]
+            data["id"] = metadata["id"]
+        except:
+            data["id"] = metadata["_id"]  # TODO REMOVE Try catch block
 
         _id = {
             "_id": data["id"],
             "_origin":  data["origin"]
         }
-        
         dl_path = paths[c.PROCESSED]
         db_col = mongo_db.get_collection(db_cols[c.PROCESSED])
         mode = "$set"
