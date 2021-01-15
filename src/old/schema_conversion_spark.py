@@ -3,9 +3,11 @@ import json
 import ast
 import numpy as np
 import pandas as pd
+from datetime import datetime
+
+from src.utility.logger import logger
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
-from datetime import datetime
 
 
 type_conversion = {
@@ -21,7 +23,7 @@ def convert_data_pyspark_to_python(value, data_type):
     try:
         return type_conversion.get(data_type)(value)
     except Exception as e:
-        print(e)
+        logger.warning(e)
         return value
 
 
@@ -92,8 +94,6 @@ def resolve_mapping(schema, df_raw):
 
     for field in schema:
         data.append(resolve_subtyes(field, df_raw))
-
-    print(data)
 
     # Transpose data (dont use numpy since this infers a dtype schema)
     if len(data[0]) > 1:

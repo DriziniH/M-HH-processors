@@ -6,6 +6,7 @@ import pandas as pd
 from datetime import datetime
 import jsonlines
 
+from src.utility.logger import logger
 
 def create_path(path):
     if not os.path.exists(os.path.dirname(path)):
@@ -13,9 +14,10 @@ def create_path(path):
             os.makedirs(os.path.dirname(path))
         except OSError as exc:  # Guard against race condition
             if exc.errno != errno.EEXIST:
+                logger.error(exc)
                 raise
         except Exception as e:
-            print(e)
+            logger.error(e)
             return False
 
 
@@ -38,10 +40,9 @@ def write_data(path, mode, data):
             f.write(data)
 
     except Exception as e:
-        print(str(e))
+        logger.error(e)
         return False
 
-    #print(f"Write operation successfull. Path: {path}")
     return True
 
 
@@ -53,10 +54,9 @@ def write_json_lines(path, mode, data):
             writer.write(data)
 
     except Exception as e:
-        print(str(e))
+        logger.error(e)
         return False
 
-    #print(f"Write operation successfull. Path: {path}")
     return True
 
 
@@ -67,7 +67,7 @@ def read_json_lines(path):
             for obj in reader:
                 data.append(obj)
     except Exception as e:
-        print(str(e))
+        logger.error(e)
         return []
     return data
 
@@ -84,9 +84,8 @@ def read_partitioned_parquet_to_pandas(path):
     try:
         table = pq.read_table(path)
         pdf = table.to_pandas()
-        #print("Successfully red partitioned parquet file")
     except Exception as e:
-        print(e)
+        logger.error(e)
         return pd.DataFrame()
     return pdf
 
@@ -108,8 +107,7 @@ def write_partitioned_parquet_from_pandas(pdf, path, partition_cols=None):
         pq.write_to_dataset(table, path, partition_cols)
 
     except Exception as e:
-        print(e)
+        logger.error(e)
         return False
 
-    #print("Writing partitioned parquet operation successfull")
     return True

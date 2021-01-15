@@ -6,6 +6,7 @@ import json
 import ast
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 
+from src.utility.logger import logger
 from src import producer
 from src import consumer
 from src.conf import properties_showcase as ps
@@ -29,7 +30,7 @@ def process_msg(msg, car_id):
                 # print(f'Info: {data}')
                 pass
     except Exception as e:
-        pass  # print(e)
+        logger.error(e)
 
 
 def consume_log(topics, car_id):
@@ -59,17 +60,18 @@ def consume_log(topics, car_id):
             if msg.error():
                 if msg.error().code() == KafkaError._PARTITION_EOF:
                     # End of partition event
-                    sys.stderr.write('%% %s [%d] reached end at offset %d\n' %
-                                     (msg.topic(), msg.partition(), msg.offset()))
+                   logger.error(('%% %s [%d] reached end at offset %d\n' %
+                                     (msg.topic(), msg.partition(), msg.offset())))
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
                 process_msg(msg, car_id)
-
+    except Exception as e:
+        logger.error(e)
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()
-        print("Thread stopped")
+        logger.info("Stopped consuming log.")
 
 
 def start_car(amount, region, topic_produce, topics_consume):
@@ -90,6 +92,8 @@ def start_car(amount, region, topic_produce, topics_consume):
         # Producer
         Thread(target=producer.publish_infite, args=(
             topic_produce, key, data)).start()
+        logger.info(f'Started producer thread. Topic: {topic_produce}')
 
         # Consumer
         Thread(target=consume_log, args=(topics_consume, car_id)).start()
+        logger.info(f'Started consumer thread. Topics: {topics_consume}')

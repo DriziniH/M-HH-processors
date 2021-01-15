@@ -4,17 +4,19 @@ import json
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from datetime import datetime
 
+from src.utility.logger import logger
+
 running = True
 
 def shutdown():
     running = False
 
 def print_message(msg, data):
-    print("Topic: %s || Partition:%d || Offset:%d" % (msg.topic(), msg.partition(),
+    logger.info("Topic: %s || Partition:%d || Offset:%d" % (msg.topic(), msg.partition(),
                                 msg.offset()))
-    print(f'Key: {msg.key()}')
-    print(f'Value: {msg.value()}')
-    print(f'Data: {data}' )
+    logger.info(f'Key: {msg.key()}')
+    logger.info(f'Value: {msg.value()}')
+    logger.info(f'Data: {data}' )
     
 
 
@@ -45,14 +47,15 @@ def consume_log(topics):
             if msg.error():
                 if msg.error().code() == KafkaError._PARTITION_EOF:
                     # End of partition event
-                    sys.stderr.write('%% %s [%d] reached end at offset %d\n' %
+                    logger.error('%% %s [%d] reached end at offset %d\n' %
                                      (msg.topic(), msg.partition(), msg.offset()))
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
-                print(msg.key())
-                print(msg.value())
-
+                logger.info(msg.key())
+                logger.info(msg.value())
+    except Exception as e:
+        logger.error(e)
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()

@@ -1,12 +1,14 @@
-import src.utility.io as io
-import src.constants as c
-from src.utility import dict_tools
-from src.utility.mongo_db import MongoDB
-
 import sys
 import json
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from datetime import datetime
+
+import src.utility.io as io
+import src.constants as c
+from src.utility import dict_tools
+from src.utility.mongo_db import MongoDB
+from src.utility.logger import logger
+
 
 running = True
 
@@ -38,7 +40,7 @@ def extract_message(msg):
         return key, value, metadata
 
     except Exception as e:
-        print(e)
+        logger.warning(e)
         return None
 
 
@@ -188,7 +190,7 @@ def consume_log(topics, processor):
             else:
                 process_msg(msg, processor)
     except Exception as e:
-        print(e)
+        logger.error(e)
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()

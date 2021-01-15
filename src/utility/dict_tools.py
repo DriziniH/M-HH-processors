@@ -1,6 +1,8 @@
 import json
 import ast
 
+from src.utility.logger import logger
+
 def recursive_extraction(data):
     """Recusivly adds all data and types from data to json string
 
@@ -40,8 +42,8 @@ def load_json_to_dict(json_string):
         try:
             return ast.literal_eval(json_string)
         except Exception as ast_e:
-            print("JSON ERROR: ", json_e)
-            print("AST ERROR: ", ast_e)
+            logger.warning("JSON ERROR: ", json_e)
+            logger.warning("AST ERROR: ", ast_e)
             return {}
 
 def extract_schema(name, data):
