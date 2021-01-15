@@ -117,7 +117,6 @@ def process_data(processor, metadata, data, msg, dt):
         f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
 
     # persist to db
-    region_topic = processor["conf"][c.TOPICS][c.PROCESSED]
     mongo_db = processor["mongo_db"]
     db_col = mongo_db.get_collection(
         processor["conf"][c.DB_COLS][c.PROCESSED])
