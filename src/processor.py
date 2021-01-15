@@ -190,7 +190,7 @@ def consume_log(topics, processor):
             else:
                 process_msg(msg, processor)
     except Exception as e:
-        logger.error(e)
+        logger.error(f'Error consuming kafka log : {e}')
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()

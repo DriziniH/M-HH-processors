@@ -18,7 +18,7 @@ def create_path(path):
                 logger.error(exc)
                 raise
         except Exception as e:
-            logger.error(e)
+            logger.error(f'Error creating path <{path}> : {e}')
             return False
 
 
@@ -51,7 +51,7 @@ def read_json_to_dict(path):
         with open(path) as f:
             return dict_tools.load_json_to_dict(f.read())
     except Exception as e:
-        logger.error(e)
+        logger.error(f'Error reading json to dict : {e}')
         return {}
 
 def write_json_lines(path, mode, data):
@@ -62,7 +62,7 @@ def write_json_lines(path, mode, data):
             writer.write(data)
 
     except Exception as e:
-        logger.error(e)
+        logger.error(f'Error writing json lines to <{path}> : {e}')
         return False
 
     return True
@@ -77,7 +77,7 @@ def read_json_lines(path,flatten):
                     json_line = dict_tools.flatten_json(json_line)
                 data.append(json_line)
     except Exception as e:
-        logger.error(e)
+        logger.error(f'Error reading json lines from <{path}> : {e}')
         return []
     return data
 
@@ -95,7 +95,7 @@ def read_partitioned_parquet_to_pandas(path):
         table = pq.read_table(path)
         pdf = table.to_pandas()
     except Exception as e:
-        logger.error(e)
+        logger.error(f'Error reading partioned parquet from <{path}> : {e}')
         return pd.DataFrame()
     return pdf
 
@@ -117,7 +117,7 @@ def write_partitioned_parquet_from_pandas(pdf, path, partition_cols=None):
         pq.write_to_dataset(table, path, partition_cols)
 
     except Exception as e:
-        logger.error(e)
+        logger.error(f'Error writing partioned parquet to path <{path}> : {e}')
         return False
 
     return True
