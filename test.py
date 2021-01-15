@@ -5,13 +5,19 @@ import logging
 from src.utility.logger import logger
 import uuid
 from datetime import datetime
-from json_to_parquet import write_json_to_partioned_parquet
-from datetime import datetime, timedelta
+from src.conf import properties_mongo as pm
+from src.utility.mongo_db import MongoDB
 
-dt = datetime.now()
+# data = {'timestamp': 2210714831115, 'jsonGraph': {'xname': 'Fuel Type', 'yname': 'Amount', 'type': 'scatter', 'x': ['gas', 'gas'], 'y': [4, 4]}}
+data = {'timestamp': 2210714831115, 'jsonGraph': {'xname': 'Time',
+                                                  'yname': 'Amount', 'type': 'scatter', 'x': 22107148311151, 'y': 5}}
 
-path_json = f"C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\CAR\\"
-path_parquet = f"C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\CAR_PARQUET\\"
 
-write_json_to_partioned_parquet(path_json,"car-usa.json",path_parquet,datetime.now() - timedelta(1))
+
+values = {"jsonGraph":  {"x": data["jsonGraph"]["x"],
+                         "y": data["jsonGraph"]["y"]}}
+print(data["jsonGraph"].pop("x"))
+print(data["jsonGraph"])
+data["jsonGraph"].pop("y")
+
 
