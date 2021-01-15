@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-
+from src.utility.logger import logger
 
 class MongoDB():
     mongo_client = None
@@ -21,9 +21,9 @@ class MongoDB():
             self.mongo_client = MongoClient(connection_string)
 
             self.mongo_db = self.mongo_client[db]
-            print("Successfully connected to MongoDB!")
+            logger.info("Successfully connected to MongoDB!")
         except Exception as e:
-            print(e)
+            logger.error(f'Error connecting to MongoDB : {e}')
             raise e
 
     def upsert_to_mongodb(self, col, _id=None, data=None, mode="$set"):
@@ -45,12 +45,12 @@ class MongoDB():
             return True
 
         except Exception as e:
-            print(e)
+            logger.error(f'Error updating data to MongoDB collection <{col}> : {e}')
             return False
 
     def get_collection(self, name):
         try:
             return self.mongo_db[name]
         except Exception as e:
-            print(e)
+            logger.error(f'Error getting collection <{name}> : {e}')
             return None
