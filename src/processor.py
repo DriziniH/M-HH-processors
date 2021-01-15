@@ -7,7 +7,6 @@ import sys
 import json
 from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from datetime import datetime
-import pandas as pd
 
 running = True
 
