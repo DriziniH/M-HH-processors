@@ -44,58 +44,6 @@ def extract_message(msg):
         return None
 
 
-def get_params_from_processor_type(processor, metadata, data, msg):
-    """Takes information about current processor (raw or analysis) and returns tuple with information and data
-
-    Args:
-        processor (dict): objects of processor
-        metadata (dict)
-        data (dict)
-        timestamp (int):
-
-    Returns:
-        data[dict]: enriched data
-        _id[dict]: if fields for mongo db update
-        dl_path[String]: Data lake path where data is persisted
-        db_col[MongoDB Collection]: Collection where data is updated
-        mode[String]: Mode how data is updated to MongoDB
-    """
-
-    paths = processor["conf"][c.DL_PATHS]
-    db_cols = processor["conf"][c.DB_COLS]
-    topics = processor["conf"][c.TOPICS]
-    mongo_db = processor["mongo_db"]
-
-    if processor["proc_type"] == "raw":
-        try:
-            data["origin"] = metadata["origin"]
-            data["id"] = metadata["id"]
-        except:
-            data["id"] = metadata["_id"]  # TODO REMOVE Try catch block
-
-        _id = {
-            "_id": data["id"],
-            "_origin":  data["origin"]
-        }
-        dl_path = paths[c.PROCESSED]
-        db_col = mongo_db.get_collection(db_cols[c.PROCESSED])
-
-    elif processor["proc_type"] == "analysis":
-        _id = {"type": metadata["type"],
-               "region": metadata["region"]}
-        db_col = mongo_db.get_collection(db_cols[c.ANALYZED_REGION])
-
-        if msg.topic() == topics[c.TOPIC_INFO_CAR]:
-            dl_path = paths[c.ANALYZED_CAR]
-        elif msg.topic() == topics[c.TOPIC_INFO_REGION]:
-            dl_path = paths[c.ANALYZED_REGION]
-
-    data["timestamp"] = msg.timestamp()[1]
-    mode = "$set"
-
-    return data, _id, dl_path, db_col, mode
-
-
 def process_data(processor, metadata, data, msg, dt):
     """Writes processed data to data lake and updates mongodb
 
@@ -107,30 +55,34 @@ def process_data(processor, metadata, data, msg, dt):
         dt (Datetime)
     """
 
-    data["timestamp"] = msg.timestamp()[1]
-    data["origin"] = metadata["origin"]
-    data["id"] = metadata["id"]
+    try:
+        data["timestamp"] = msg.timestamp()[1]
+        data["origin"] = metadata["origin"]
+        data["id"] = metadata["id"]
 
-    # persist to data lake
-    dl_path = processor["conf"][c.DL_PATHS][c.PROCESSED]
-    io.write_json_lines(
-        f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
+        # persist to data lake
+        dl_path = processor["conf"][c.DL_PATHS][c.PROCESSED]
+        io.write_json_lines(
+            f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
 
-    # persist to db
-    mongo_db = processor["mongo_db"]
-    db_col = mongo_db.get_collection(
-        processor["conf"][c.DB_COLS][c.PROCESSED])
+        # persist to db
+        mongo_db = processor["mongo_db"]
+        db_col = mongo_db.get_collection(
+            processor["conf"][c.DB_COLS][c.PROCESSED])
 
-    _id = {
-        "_id": data["id"],
-        "_origin":  data["origin"]
-    }
+        _id = {
+            "_id": data["id"],
+            "_origin":  data["origin"]
+        }
 
-    mongo_db.upsert_to_mongodb(
-        col=db_col, _id=_id, data=data, mode="$set")
+        mongo_db.upsert_to_mongodb(
+            col=db_col, _id=_id, data=data, mode="$set")
 
+    except Exception as e:
+        logger.error(f'Failed to process data: {e}')
+        return
 
-def process_analysis_results(processor, metadata, json_graph, msg, dt):
+def process_analysis_results(processor, metadata, analysis_results, msg, dt):
     """Writes analysis results to data lake and updates mongodb
 
     Args:
@@ -140,40 +92,44 @@ def process_analysis_results(processor, metadata, json_graph, msg, dt):
         timestamp (int)
         dt (Datetime)
     """
-    data = {
-        "timestamp": msg.timestamp()[1],
-        "jsonGraph": json_graph
-    }
 
-    # persist to data lake
-    dl_path = processor["conf"][c.DL_PATHS][c.ANALYZED_REGION]
-    io.write_json_lines(
-        f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
+    try:
+        analysis_results.update({"timestamp": msg.timestamp()[1]})
 
-    # persist to db
-    mongo_db = processor["mongo_db"]
-    db_col = mongo_db.get_collection(
-        processor["conf"][c.DB_COLS][c.ANALYZED_REGION])
+        # persist to data lake
+        dl_path = processor["conf"][c.DL_PATHS][c.ANALYZED_REGION]
+        io.write_json_lines(
+            f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", analysis_results)
 
-    _id = {"type": metadata["type"],
-           "region": metadata["region"]}
+        # persist to db
+        mongo_db = processor["mongo_db"]
+        db_col = mongo_db.get_collection(
+            processor["conf"][c.DB_COLS][c.ANALYZED_REGION])
 
-    try:  # TODO REMOVE try block
-        # update fields with $set operator is values are lists
-        if type(json_graph["x"]) is list and type(json_graph["y"]) is list:
-            mongo_db.upsert_to_mongodb(
-                col=db_col, _id=_id, data=data, mode="$set")
-        else:  # update fields and update arrays
-            values = {"jsonGraph": {
-                "x":  data["jsonGraph"].pop("x"), "y": data["jsonGraph"].pop("y")}}
+        _id = {"type": metadata["type"],
+            "region": metadata["region"]}
 
-            mongo_db.upsert_to_mongodb(
-                col=db_col, _id=_id, data=data, mode="$set")
-            mongo_db.upsert_to_mongodb(
-                col=db_col, _id=_id, data=values, mode="$push")
+        try:  # TODO REMOVE try block
+            json_graph = analysis_results["jsonGraph"]
+            # update fields with $set operator is values are lists
+            if type(json_graph["x"]) is list and type(json_graph["y"]) is list:
+                mongo_db.upsert_to_mongodb(
+                    col=db_col, _id=_id, data=analysis_results, mode="$set")
+            else:  # update fields and update append arrays
+                values = {"jsonGraph": {
+                    "x":  analysis_results["jsonGraph"].pop("x"), "y": analysis_results["jsonGraph"].pop("y")}}
 
-    except:
-        pass
+                mongo_db.upsert_to_mongodb(
+                    col=db_col, _id=_id, data=analysis_results, mode="$set")
+                mongo_db.upsert_to_mongodb(
+                    col=db_col, _id=_id, data=values, mode="$push")
+
+        except:
+            pass
+    
+    except Exception as e:
+        logger.error(f'Failed to process analysis results: {e}')
+        raise e
 
 
 def process_msg(msg, processor):
@@ -186,40 +142,43 @@ def process_msg(msg, processor):
     Args:
         msg (kafka message): kafka message
     """
+    try:
+        key, value, metadata = extract_message(
+            msg)
 
-    key, value, metadata = extract_message(
-        msg)
+        # time data
+        dt = metadata.get("datetime" , datetime.now())
+        day = dt.day
+        month = dt.month
+        year = dt.year
 
-    # time data
-    dt = metadata["datetime"]
-    day = dt.day
-    month = dt.month
-    year = dt.year
+        # persist raw events
+        event = {
+            "topic": msg.topic(),
+            "partition": msg.partition(),
+            "offset": msg.offset(),
+            "timestamp": msg.timestamp(),
+            "key": "" if key is None else key,
+            "value": value
+        }
 
-    # persist raw events
-    event = {
-        "topic": msg.topic(),
-        "partition": msg.partition(),
-        "offset": msg.offset(),
-        "timestamp": msg.timestamp(),
-        "key": "" if key is None else key,
-        "value": value
-    }
+        io.write_data(
+            f'{processor["conf"][c.DL_PATHS][c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
-    io.write_data(
-        f'{processor["conf"][c.DL_PATHS][c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
+        # dont write car analysis data to db
+        if msg.topic() == processor["conf"][c.TOPICS][c.TOPIC_ANALYSIS_CAR]:
+            return
 
-    # dont write car analysis data to db
-    if msg.topic() == processor["conf"][c.TOPICS][c.TOPIC_INFO_CAR]:
+        data = dict_tools.load_json_to_dict(value)
+
+        proc_type = processor.get("proc_type", None)
+        if proc_type == "raw":
+            process_data(processor, metadata, data, msg, dt)
+        elif proc_type == "analysis":
+            process_analysis_results(processor, metadata, data, msg, dt)
+    except Exception as e:
+        logger.error(f'Failed to process message: {e}')
         return
-
-    data = dict_tools.load_json_to_dict(value)
-
-    proc_type = processor["proc_type"]
-    if proc_type == "raw":
-        process_data(processor, metadata, data, msg, dt)
-    elif proc_type == "analysis":
-        process_analysis_results(processor, metadata, data, msg, dt)
 
 
 def shutdown():

@@ -1,0 +1,12 @@
+{
+    "name": "name",
+    "id": "id",
+    "fields": [
+        {
+            "name": "model",
+            "type": "str",
+            "nullable": false,
+            "metadata": {}
+        }
+    ]
+}

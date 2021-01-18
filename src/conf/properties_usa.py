@@ -22,8 +22,8 @@ CONF = {
     # Kafka Topics
     c.TOPICS: {
         c.TOPIC_RAW: "car-usa",
-        c.TOPIC_INFO_CAR: "car-usa-info",
-        c.TOPIC_INFO_REGION: "region-usa-info"
+        c.TOPIC_INFO_CAR: "car-usa-analysis",
+        c.TOPIC_INFO_REGION: "region-usa-analysis"
     },
 
     # MongoDB config

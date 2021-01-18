@@ -1,22 +1,5 @@
 {
-    "name": "schema_eu",
-    "file_origin": [
-        {
-            "name": "car_data",
-            "path": "processed/car.json",
-            "type": "json"
-        },
-        {
-            "name": "raw_data",
-            "path": "raw/car.parquet",
-            "type": "parquet"
-        },
-        {
-            "name": "custom_file",
-            "path": "raw/data.csv",
-            "type": "csv"
-        }
-    ],
+    "name": "eu",
     "fields": [
         {
             "name": "model",

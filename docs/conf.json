@@ -1,0 +1,8 @@
+{
+    "name": "region",
+    "pathsDL": {
+        "rawEvents": "data-lake/raw-events/car/",
+        "processed": "data-lake/processed/car/",
+        "analyzedCar": "data-lake/analyzed/"
+    }
+}
