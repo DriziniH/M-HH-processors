@@ -5,19 +5,18 @@ from src.processor import start_processor
 from src.conf import properties_eu, properties_usa
 from src import constants as c
 from src.conf import properties_mongo as pm
+from src.utility.mongo_db import MongoDB
 
 
-conf_eu = properties_eu.CONF
-conf_usa = properties_usa.CONF
+mongo_db = MongoDB(pm.db_con_usa, "M-HH-USA")
 
-Thread(target=start_processor, args=(
-    conf_eu, [conf_eu[c.TOPICS][c.TOPIC_INGEST]], pm.db_con_eu,"ingest")).start()
-logger.info(f'Started ingest processor thread for EU region.')
+conf_col = mongo_db.get_collection("config")
 
-Thread(target=start_processor, args=(
-    conf_usa, [conf_usa[c.TOPICS][c.TOPIC_INGEST]], pm.db_con_usa,"ingest")).start()
-logger.info(f'Started ingest processor thread for USA region.')
+conf = conf_col.find_one({}, {'_id': False})
 
-Thread(target=start_processor, args=(
-    conf_usa, [conf_usa[c.TOPICS][c.TOPIC_ANALYSIS_REGION],conf_usa[c.TOPICS][c.TOPIC_ANALYSIS_CAR]], pm.db_con_usa,"analysis")).start()
-logger.info(f'Started analysis processor thread for USA region.')
+
+for name, topics in conf["topics"].items():
+    for topic in topics:
+        Thread(target=start_processor, args=(
+            conf, [topic], mongo_db, name)).start()
+        logger.info(f'Started {name} processor thread for Topic {topic}.')

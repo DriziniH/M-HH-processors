@@ -6,7 +6,6 @@ from datetime import datetime
 import src.utility.io as io
 import src.constants as c
 from src.utility import dict_tools
-from src.utility.mongo_db import MongoDB
 from src.utility.logger import logger
 
 
@@ -57,7 +56,7 @@ def process_data(processor, metadata, data, msg, dt):
 
     try:
         data["timestamp"] = msg.timestamp()[1]
-        data["origin"] = metadata["origin"]
+        data["origin"] = metadata.get("origin", msg.topic())
         data["id"] = metadata["id"]
 
         # persist to data lake
@@ -95,37 +94,41 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
     """
 
     try:
-        analysis_results.update({"timestamp": msg.timestamp()[1]})
+        if "id" in metadata:
+            analysis_results.update({"id": metadata.get("id", "")})
+
+        analysis_results.update({"origin": metadata.get("origin", msg.topic()),
+                                 "timestamp": msg.timestamp()[1]})
 
         # persist to data lake
         dl_path = processor["conf"]["pathsDL"]["analyzed"]
         io.write_json_lines(
             f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", analysis_results)
 
+        # dont write car analysis data to db
+        if msg.topic() in processor["conf"]["topics"]["analysisCar"]:
+            return
+
         # persist to db
         mongo_db = processor["mongo_db"]
-        db_col = mongo_db.get_collection("anaylsis")
+        db_col = mongo_db.get_collection("analysis")
 
         _id = {"type": metadata["type"],
                "region": metadata["region"]}
 
-        try:  # TODO REMOVE try block
-            json_graph = analysis_results["jsonGraph"]
-            # update fields with $set operator is values are lists
-            if type(json_graph["x"]) is list and type(json_graph["y"]) is list:
-                mongo_db.upsert_to_mongodb(
-                    col=db_col, _id=_id, data=analysis_results, mode="$set")
-            else:  # update fields and update append arrays
-                values = {"jsonGraph": {
-                    "x":  analysis_results["jsonGraph"].pop("x"), "y": analysis_results["jsonGraph"].pop("y")}}
+        json_graph = analysis_results["jsonGraph"]
+        # update fields with $set operator is values are lists
+        if type(json_graph["x"]) is list and type(json_graph["y"]) is list:
+            mongo_db.upsert_to_mongodb(
+                col=db_col, _id=_id, data=analysis_results, mode="$set")
+        else:  # update fields and update append arrays
+            values = {"jsonGraph": {
+                "x":  analysis_results["jsonGraph"].pop("x"), "y": analysis_results["jsonGraph"].pop("y")}}
 
-                mongo_db.upsert_to_mongodb(
-                    col=db_col, _id=_id, data=analysis_results, mode="$set")
-                mongo_db.upsert_to_mongodb(
-                    col=db_col, _id=_id, data=values, mode="$push")
-
-        except:
-            pass
+            mongo_db.upsert_to_mongodb(
+                col=db_col, _id=_id, data=analysis_results, mode="$set")
+            mongo_db.upsert_to_mongodb(
+                col=db_col, _id=_id, data=values, mode="$push")
 
     except Exception as e:
         logger.error(f'Failed to process analysis results: {e}')
@@ -165,16 +168,12 @@ def process_msg(msg, processor):
         io.write_data(
             f'{processor["conf"]["pathsDL"]["rawEvents"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
-        # dont write car analysis data to db
-        if msg.topic() in processor["conf"]["topics"]["analysisCar"]:
-            return
-
         data = dict_tools.load_json_to_dict(value)
 
         proc_type = processor.get("proc_type", None)
         if proc_type == "ingest":
             process_data(processor, metadata, data, msg, dt)
-        elif proc_type == "analysis":
+        elif "analysis" in proc_type:
             process_analysis_results(processor, metadata, data, msg, dt)
     except Exception as e:
         logger.error(f'Failed to process message: {e}')
@@ -225,19 +224,13 @@ def consume_log(topics, processor):
         consumer.close()
 
 
-def start_processor(conf, topics, dbcon, processor_type="ingest"):
+def start_processor(conf, topics, mongo_db, processor_type="ingest"):
     """Connects to MongoDB and starts consuming the log from given topics
     Args:
         conf (dict): region config
         topics (String[]): kafka topics
         dbcon (String): MongoDB connection string
     """
-
-    mongo_db = MongoDB(dbcon, "M-HH-USA")
-
-    conf_col = mongo_db.get_collection("config")
-
-    conf = conf_col.find_one({}, "_id")
 
     processor = {
         "conf": conf,

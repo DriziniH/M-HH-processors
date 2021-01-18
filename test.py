@@ -8,7 +8,8 @@ from datetime import datetime
 from src.conf import properties_mongo as pm
 from src.utility.mongo_db import MongoDB
 
-print(type(str()))
+for _ in range(4):
+    print(uuid.uuid4())
 
 
 
