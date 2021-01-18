@@ -61,14 +61,14 @@ def process_data(processor, metadata, data, msg, dt):
         data["id"] = metadata["id"]
 
         # persist to data lake
-        dl_path = processor["conf"][c.DL_PATHS][c.PROCESSED]
+        dl_path = processor["conf"]["pathsDL"]["processed"]
         io.write_json_lines(
             f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
 
         # persist to db
         mongo_db = processor["mongo_db"]
         db_col = mongo_db.get_collection(
-            processor["conf"][c.DB_COLS][c.PROCESSED])
+            "processed")
 
         _id = {
             "_id": data["id"],
@@ -81,6 +81,7 @@ def process_data(processor, metadata, data, msg, dt):
     except Exception as e:
         logger.error(f'Failed to process data: {e}')
         return
+
 
 def process_analysis_results(processor, metadata, analysis_results, msg, dt):
     """Writes analysis results to data lake and updates mongodb
@@ -97,17 +98,16 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
         analysis_results.update({"timestamp": msg.timestamp()[1]})
 
         # persist to data lake
-        dl_path = processor["conf"][c.DL_PATHS][c.ANALYZED_REGION]
+        dl_path = processor["conf"]["pathsDL"]["analyzed"]
         io.write_json_lines(
             f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", analysis_results)
 
         # persist to db
         mongo_db = processor["mongo_db"]
-        db_col = mongo_db.get_collection(
-            processor["conf"][c.DB_COLS][c.ANALYZED_REGION])
+        db_col = mongo_db.get_collection("anaylsis")
 
         _id = {"type": metadata["type"],
-            "region": metadata["region"]}
+               "region": metadata["region"]}
 
         try:  # TODO REMOVE try block
             json_graph = analysis_results["jsonGraph"]
@@ -126,7 +126,7 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
 
         except:
             pass
-    
+
     except Exception as e:
         logger.error(f'Failed to process analysis results: {e}')
         raise e
@@ -147,7 +147,7 @@ def process_msg(msg, processor):
             msg)
 
         # time data
-        dt = metadata.get("datetime" , datetime.now())
+        dt = metadata.get("datetime", datetime.now())
         day = dt.day
         month = dt.month
         year = dt.year
@@ -163,16 +163,16 @@ def process_msg(msg, processor):
         }
 
         io.write_data(
-            f'{processor["conf"][c.DL_PATHS][c.RAW_EVENTS]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
+            f'{processor["conf"]["pathsDL"]["rawEvents"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
         # dont write car analysis data to db
-        if msg.topic() == processor["conf"][c.TOPICS][c.TOPIC_ANALYSIS_CAR]:
+        if msg.topic() in processor["conf"]["topics"]["analysisCar"]:
             return
 
         data = dict_tools.load_json_to_dict(value)
 
         proc_type = processor.get("proc_type", None)
-        if proc_type == "raw":
+        if proc_type == "ingest":
             process_data(processor, metadata, data, msg, dt)
         elif proc_type == "analysis":
             process_analysis_results(processor, metadata, data, msg, dt)
@@ -225,7 +225,7 @@ def consume_log(topics, processor):
         consumer.close()
 
 
-def start_processor(conf, topics, dbcon, processor_type="raw"):
+def start_processor(conf, topics, dbcon, processor_type="ingest"):
     """Connects to MongoDB and starts consuming the log from given topics
     Args:
         conf (dict): region config
@@ -233,7 +233,11 @@ def start_processor(conf, topics, dbcon, processor_type="raw"):
         dbcon (String): MongoDB connection string
     """
 
-    mongo_db = MongoDB(dbcon, conf[c.DB_NAME])
+    mongo_db = MongoDB(dbcon, "M-HH-USA")
+
+    conf_col = mongo_db.get_collection("config")
+
+    conf = conf_col.find_one({}, "_id")
 
     processor = {
         "conf": conf,

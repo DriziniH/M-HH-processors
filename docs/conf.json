@@ -4,5 +4,27 @@
         "rawEvents": "data-lake/raw-events/car/",
         "processed": "data-lake/processed/car/",
         "analyzedCar": "data-lake/analyzed/"
+    },
+    "topics": {
+        "ingest": [
+            "car-usa",
+            "car-eu",
+            "car-china"
+        ],
+        "processed": [
+            "car-usa-processed",
+            "car-eu-processed",
+            "car-china-processed"
+        ],
+        "analysisRegion": [
+            "region-usa-analysis",
+            "region-eu-analysis",
+            "region-china-analysis"
+        ],
+        "analysisCar": [
+            "car-usa-analysis",
+            "car-eu-analysis",
+            "car-china-analysis"
+        ]
     }
 }
