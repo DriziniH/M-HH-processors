@@ -74,20 +74,22 @@ def consume_log(topics, car_id):
         logger.info("Stopped consuming log.")
 
 
-def start_car(amount, region, origin, topic_produce, topics_consume):
+def start_car(amount, region, topic_produce, topics_consume):
 
     for i in range(amount):
-        try:
-            car_id = ps.IDS[i]
-        except Exception as e:
-            car_id = str(uuid.uuid4())
 
-        key = {"region": region, "id": car_id, "origin": "origin"}
 
         if region == "eu":
+            car_id = ps.IDS_EU.get(i, uuid.uuid4())
             data = ps.get_car_data_eu()
         elif region == "usa":
+            car_id = ps.IDS_USA.get(i, uuid.uuid4())
             data = ps.get_car_data_usa()
+        elif region == "china":
+            car_id = ps.IDS_CHINA.get(i, uuid.uuid4())
+            data = ps.get_car_data_usa()
+
+        key = {"id": car_id}
 
         # Producer
         Thread(target=producer.publish_infite, args=(

@@ -8,7 +8,7 @@
                 "ingest": "car-eu",
                 "processed": "car-eu-processed",
                 "analysisCar": "car-eu-analysis",
-                "analysisRegion": "region-eu-anaysis"
+                "analysisRegion": "region-eu-analysis"
             }
         },
         "usa": {
@@ -18,7 +18,7 @@
                 "ingest": "car-usa",
                 "processed": "car-usa-processed",
                 "analysisCar": "car-usa-analysis",
-                "analysisRegion": "region-usa-anaysis"
+                "analysisRegion": "region-usa-analysis"
             }
         },
         "china": {
@@ -28,7 +28,7 @@
                 "ingest": "car-china",
                 "processed": "car-china-processed",
                 "analysisCar": "car-china-analysis",
-                "analysisRegion": "region-china-anaysis"
+                "analysisRegion": "region-china-analysis"
             }
         }
     },

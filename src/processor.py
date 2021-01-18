@@ -11,7 +11,6 @@ from src.utility.logger import logger
 
 running = True
 
-
 def extract_message(msg):
     """Decodes and extracts metadata information from kafka message
 
@@ -42,7 +41,6 @@ def extract_message(msg):
         logger.warning(e)
         return None
 
-
 def process_data(processor, metadata, data, msg, dt):
     """Writes processed data to data lake and updates mongodb
 
@@ -55,10 +53,6 @@ def process_data(processor, metadata, data, msg, dt):
     """
 
     try:
-        data["timestamp"] = msg.timestamp()[1]
-        data["origin"] = metadata.get("origin", msg.topic())
-        data["id"] = metadata["id"]
-
         # persist to data lake
         dl_path = processor["conf"]["pathsDL"]["processed"]
         io.write_json_lines(
@@ -70,8 +64,8 @@ def process_data(processor, metadata, data, msg, dt):
             "processed")
 
         _id = {
-            "_id": data["id"],
-            "_origin":  data["origin"]
+            "_id" : data.pop("id"),
+            "_origin":  metadata["origin"]
         }
 
         mongo_db.upsert_to_mongodb(
@@ -94,27 +88,21 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
     """
 
     try:
-        if "id" in metadata:
-            analysis_results.update({"id": metadata.get("id", "")})
-
-        analysis_results.update({"origin": metadata.get("origin", msg.topic()),
-                                 "timestamp": msg.timestamp()[1]})
-
         # persist to data lake
         dl_path = processor["conf"]["pathsDL"]["analyzed"]
         io.write_json_lines(
             f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", analysis_results)
 
         # dont write car analysis data to db
-        if msg.topic() in processor["conf"]["topics"]["analysisCar"]:
+        if processor["conf"]["car"]:
             return
 
         # persist to db
         mongo_db = processor["mongo_db"]
         db_col = mongo_db.get_collection("analysis")
 
-        _id = {"type": metadata["type"],
-               "region": metadata["region"]}
+        _id = {"_type": metadata["type"],
+               "_origin": metadata["origin"]}
 
         json_graph = analysis_results["jsonGraph"]
         # update fields with $set operator is values are lists
@@ -132,10 +120,10 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
 
     except Exception as e:
         logger.error(f'Failed to process analysis results: {str(e)}')
-        raise e
+        raise e 
 
 
-def process_msg(msg, processor):
+def process_msg(msg, processor, region_id):
     """
     Extracts and decodes message
     Persists raw event 
@@ -148,6 +136,8 @@ def process_msg(msg, processor):
     try:
         key, value, metadata = extract_message(
             msg)
+        
+        metadata["origin"] = region_id
 
         # time data
         dt = metadata.get("datetime", datetime.now())
@@ -169,12 +159,18 @@ def process_msg(msg, processor):
             f'{processor["conf"]["pathsDL"]["rawEvents"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
         data = dict_tools.load_json_to_dict(value)
-
+        if "id" in metadata:
+            data.update({"id": metadata["id"]})
+        data["timestamp"] = msg.timestamp()[1]
+        
         proc_type = processor.get("proc_type", None)
         if proc_type == "ingest":
             process_data(processor, metadata, data, msg, dt)
         elif "analysis" in proc_type:
             process_analysis_results(processor, metadata, data, msg, dt)
+        else:
+            raise Exception("Invalid processor type")
+
     except Exception as e:
         logger.error(f'Failed to process message: {str(e)}')
         return
@@ -184,7 +180,7 @@ def shutdown():
     running = False
 
 
-def consume_log(topics, processor):
+def consume_log(topics, processor, region_id):
     """Infinitly reads kafka log from latest point
 
     Args:
@@ -211,12 +207,13 @@ def consume_log(topics, processor):
             if msg.error():
                 if msg.error().code() == KafkaError._PARTITION_EOF:
                     # End of partition event
-                    sys.stderr.write('%% %s [%d] reached end at offset %d\n' %
+                    logger.error('%% %s [%d] reached end at offset %d\n' %
                                      (msg.topic(), msg.partition(), msg.offset()))
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
-                process_msg(msg, processor)
+                process_msg(msg, processor, region_id)
+                
     except Exception as e:
         logger.error(f'Error consuming kafka log : {str(e)}')
     finally:
@@ -238,4 +235,4 @@ def start_processor(conf, topics, mongo_db, processor_type="ingest"):
         "mongo_db": mongo_db
     }
 
-    consume_log(topics, processor)
+    consume_log(topics, processor, processor["conf"]["origin"])
