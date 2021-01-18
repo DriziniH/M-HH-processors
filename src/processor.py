@@ -78,7 +78,7 @@ def process_data(processor, metadata, data, msg, dt):
             col=db_col, _id=_id, data=data, mode="$set")
 
     except Exception as e:
-        logger.error(f'Failed to process data: {e}')
+        logger.error(f'Failed to process data: {str(e)}')
         return
 
 
@@ -131,7 +131,7 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
                 col=db_col, _id=_id, data=values, mode="$push")
 
     except Exception as e:
-        logger.error(f'Failed to process analysis results: {e}')
+        logger.error(f'Failed to process analysis results: {str(e)}')
         raise e
 
 
@@ -176,7 +176,7 @@ def process_msg(msg, processor):
         elif "analysis" in proc_type:
             process_analysis_results(processor, metadata, data, msg, dt)
     except Exception as e:
-        logger.error(f'Failed to process message: {e}')
+        logger.error(f'Failed to process message: {str(e)}')
         return
 
 
@@ -218,7 +218,7 @@ def consume_log(topics, processor):
             else:
                 process_msg(msg, processor)
     except Exception as e:
-        logger.error(f'Error consuming kafka log : {e}')
+        logger.error(f'Error consuming kafka log : {str(e)}')
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()

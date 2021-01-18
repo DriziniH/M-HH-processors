@@ -30,7 +30,7 @@ def process_msg(msg, car_id):
                 # print(f'Info: {data}')
                 pass
     except Exception as e:
-        logger.error(f'Error processing kafka message : {e}')
+        logger.error(f'Error processing kafka message : {str(e)}')
 
 
 def consume_log(topics, car_id):
@@ -67,7 +67,7 @@ def consume_log(topics, car_id):
             else:
                 process_msg(msg, car_id)
     except Exception as e:
-        logger.error(f'Error consuming kafka log : {e}')
+        logger.error(f'Error consuming kafka log : {str(e)}')
     finally:
         # Close down consumer to commit final offsets.
         consumer.close()

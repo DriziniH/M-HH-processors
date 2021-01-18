@@ -26,7 +26,7 @@ def json_to_parquet(path_json, datetime):
             })
         pdf = pd.DataFrame(data_json)
     except Exception as e:
-        logger.error(f'Error converting json to pandas: {e}')
+        logger.error(f'Error converting json to pandas: {str(e)}')
         return pd.DateFrame()
 
     return pdf

@@ -24,7 +24,7 @@ class MongoDB():
             self.mongo_db = self.mongo_client[db]
             logger.info("Successfully connected to MongoDB!")
         except Exception as e:
-            logger.error(f'Error connecting to MongoDB : {e}')
+            logger.error(f'Error connecting to MongoDB : {str(e)}')
             raise e
 
     def upsert_to_mongodb(self, col, _id=None, data=None, mode="$set"):
@@ -62,12 +62,12 @@ class MongoDB():
 
         except Exception as e:
             logger.error(
-                f'Error updating data to MongoDB collection <{col}> : {e}')
+                f'Error updating data to MongoDB collection <{col}> : {str(e)}')
             return False
 
     def get_collection(self, name):
         try:
             return self.mongo_db[name]
         except Exception as e:
-            logger.error(f'Error getting collection <{name}> : {e}')
+            logger.error(f'Error getting collection <{name}> : {str(e)}')
             return None

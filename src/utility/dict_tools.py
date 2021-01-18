@@ -65,7 +65,7 @@ def extract_schema(name, data):
     try:
         return json.loads(schema)
     except Exception as e:
-        print(e)
+        logger.error(f'Error extracting schema: {str(e)}')
         return schema
 
 
