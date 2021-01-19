@@ -1,6 +1,6 @@
 import json
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from src.utility import io
 from src.utility.logger import logger
@@ -53,12 +53,3 @@ def write_json_to_partioned_parquet(path_json, filename_json, path_parquet, date
 
     logger.info(f'Succesfully persisted parquet data to <{path_parquet}>')
     return True
-
-
-path_json = f"C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\CAR\\"
-file_json = "car-usa.json"
-path_parquet = f"C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\CAR_PARQUET\\"
-
-
-write_json_to_partioned_parquet(
-    path_json, file_json, path_parquet, datetime.now() - timedelta(1))

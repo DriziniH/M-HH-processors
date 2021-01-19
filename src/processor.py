@@ -135,7 +135,7 @@ def process_msg(msg, processor):
         key, value, metadata = extract_message(
             msg)
         
-        metadata["origin"] = processor["conf"]["id"]
+        metadata["origin"] = processor["conf"]["_id"]
 
         # time data
         dt = metadata.get("datetime", datetime.now())
@@ -143,14 +143,14 @@ def process_msg(msg, processor):
         month = dt.month
         year = dt.year
 
-        # persist events
+        # persist events #TODO replace by firehose
         event = {
             "topic": msg.topic(),
             "partition": msg.partition(),
             "offset": msg.offset(),
             "timestamp": msg.timestamp(),
-            "key": "" if key is None else key,
-            "value": value
+            "key": "" if key is None else json.loads(key),
+            "value": json.loads(value)
         }
         io.write_data(
             f'data-lake/{processor["conf"]["pathsDL"]["events"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))

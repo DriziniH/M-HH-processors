@@ -689,7 +689,7 @@
                     "metadata": {}
                 },
                 {
-                    "name": "mph",
+                    "name": "kmh",
                     "type": "float",
                     "nullable": false,
                     "metadata": {}
@@ -1006,6 +1006,85 @@
             ]
         },
         {
+            "_id": "b492a53d-b0fe-42d4-a02b-8ad054977f12",
+            "label": "China",
+            "description": "Complete schema from data produced by cars in china",
+            "fields": [
+                {
+                    "name": "模型",
+                    "type": "string",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "燃料",
+                    "type": "string",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "千米_总",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "千米",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "旅行_时候_总",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "旅行_时候",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "油_层次",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "断裂_流畅_层次",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "燃料_层次",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "发动机",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "休息",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                },
+                {
+                    "name": "胎压",
+                    "type": "float",
+                    "nullable": false,
+                    "metadata": {}
+                }
+            ]
+        },
+        {
             "_id": "e8ba2cef-3c6a-4037-9080-f890112e9942",
             "label": "Car-info",
             "description": "Schema that contains all descriptive information about a car",
@@ -1247,6 +1326,91 @@
                     "type": "float",
                     "nullable": false,
                     "metadata": {}
+                }
+            ]
+        },
+        {
+            "_id": "c271b1b3-837c-4830-b53a-1a8978750fff",
+            "label": "Combined",
+            "description": "Schema that contains data from both regions",
+            "fields": [
+                {
+                    "name": "km",
+                    "type": "dict",
+                    "nullable": false,
+                    "metadata": {},
+                    "fields": [
+                        {
+                            "name": "km_total",
+                            "type": "float",
+                            "nullable": false,
+                            "metadata": {
+                                "corr_field": "kilometer_total"
+                            }
+                        },
+                        {
+                            "name": "km_drive",
+                            "type": "float",
+                            "nullable": false,
+                            "metadata": {
+                                "corr_field": "kilometer"
+                            }
+                        },
+                        {
+                            "name": "mph",
+                            "type": "float",
+                            "nullable": false,
+                            "metadata": {}
+                        },
+                        {
+                            "name": "mileage_total",
+                            "type": "float",
+                            "nullable": false,
+                            "metadata": {}
+                        },
+                        {
+                            "name": "mileage",
+                            "type": "float",
+                            "nullable": false,
+                            "metadata": {}
+                        },
+                        {
+                            "name": "pos",
+                            "type": "dict",
+                            "nullable": false,
+                            "metadata": {},
+                            "fields": [
+                                {
+                                    "name": "lat",
+                                    "type": "float",
+                                    "nullable": false,
+                                    "metadata": {
+                                        "corr_field": "pos.lat"
+                                    }
+                                },
+                                {
+                                    "name": "lon",
+                                    "type": "float",
+                                    "nullable": false,
+                                    "metadata": {
+                                        "corr_field": "pos.lon"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "name": "kmh",
+                            "type": "float",
+                            "nullable": false,
+                            "metadata": {}
+                        },
+                        {
+                            "name": "mph",
+                            "type": "float",
+                            "nullable": false,
+                            "metadata": {}
+                        }
+                    ]
                 }
             ]
         }

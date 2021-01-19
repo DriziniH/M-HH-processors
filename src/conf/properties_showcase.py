@@ -148,6 +148,29 @@ def get_car_data_eu():
     }
 
 
+def get_car_data_china():
+    return {
+
+        "模型": "甲级",
+        "标签": ["本泽"],
+        "燃料": "柴油",
+
+        "千米_总":  random.uniform(2000.0, 100000.0),
+        "千米": random.uniform(0.0, 500.0),
+        "旅行_时候_总": random.randrange(0, 10000000000),
+        "旅行_时候": random.randrange(0, 500),
+
+        "油_层次": random.uniform(0.0, 100.0),
+        "断裂_流畅_层次": random.uniform(0.0, 100.0),
+        "燃料_层次": random.uniform(0.0, 90.0),
+
+        "发动机": random.uniform(0.0, 100.0),
+        "休息": random.uniform(0.0, 100.0),
+
+        "胎压": random.uniform(0.0, 100.0)
+    }
+
+
 IDS_EU = {
     0: "1a7a18f9-b795-4979-a2ca-dbe816fa43a3",
     1: "5c40d7cc-965b-4086-9cf8-666f677100b4",

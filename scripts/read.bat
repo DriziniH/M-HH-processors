@@ -1,1 +1,1 @@
-C:\Showcase\kafka\bin\windows\kafka-console-consumer --topic car-usa --from-beginning --bootstrap-server localhost:9092
+C:\Showcase\kafka\bin\windows\kafka-console-consumer --topic car-china --from-beginning --bootstrap-server localhost:9092
