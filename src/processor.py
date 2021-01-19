@@ -64,7 +64,7 @@ def process_data(processor, metadata, data, msg, dt):
 
         _id = {
             "_id" : data.pop("id"),
-            "_origin":  metadata["origin"]
+            "_unit":  metadata["unit"]
         }
 
         mongo_db.upsert_to_mongodb(
@@ -100,7 +100,7 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
         db_col = mongo_db.get_collection("analysis")
 
         _id = {"_type": metadata["type"],
-               "_origin": metadata["origin"]}
+               "_unit": metadata["unit"]}
 
         json_graph = analysis_results["jsonGraph"]
         # update fields with $set operator is values are lists
@@ -135,7 +135,7 @@ def process_msg(msg, processor):
         key, value, metadata = extract_message(
             msg)
         
-        metadata["origin"] = processor["conf"]["_id"]
+        metadata["unit"] = processor["conf"]["_id"]
 
         # time data
         dt = metadata.get("datetime", datetime.now())

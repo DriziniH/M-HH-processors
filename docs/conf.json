@@ -1,7 +1,7 @@
 {
     "name": "region",
-    "units": {
-        "eu": {
+    "units": [
+        {
             "_id": "d9c1d7e3-f428-4588-99b4-f5ee64b25e7a",
             "label": "Region EU",
             "topics": {
@@ -161,7 +161,7 @@
                 }
             ]
         },
-        "usa": {
+        {
             "_id": "f590cd1c-daec-4686-b9af-0bb831f9d5bc",
             "label": "Region USA",
             "topics": {
@@ -327,7 +327,7 @@
                 }
             ]
         },
-        "china": {
+        {
             "_id": "4f5127bb-7326-4192-bbb2-eb397dd345d3",
             "label": "Region China",
             "topics": {
@@ -493,7 +493,7 @@
                 }
             ]
         }
-    },
+    ],
     "schemas": [
         {
             "_id": "9fc14965-8241-46f7-aa32-2eb27b7341e0",
