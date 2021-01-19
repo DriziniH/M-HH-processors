@@ -15,17 +15,9 @@ conf_col = mongo_db.get_collection("config")
 conf = conf_col.find_one({}, {'_id': False})
 
 
-for _, unit in conf["units"].items():
-    for name, topic in unit["topics"].items():
-
-        #If analysis processor with car results
-        if name == "analysisCar":
-            conf["car"] = True
-        else:
-            conf["car"] = False
-
-        conf["origin"] = unit["id"]
+for unit_name, unit_conf in conf["units"].items():
+    for topic_type, topic in unit_conf["topics"].items():
         Thread(target=start_processor, args=(
-            conf, [topic], mongo_db, name)).start()
-        logger.info(f'Started {name} processor thread for {unit["label"]}. Consuming Topic: {topic}')
-
+            unit_conf, [topic], mongo_db, topic_type)).start()
+        logger.info(
+            f'Started {topic_type} processor thread for {unit_conf["label"]}. Consuming Topic: {topic}')
