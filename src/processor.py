@@ -54,9 +54,8 @@ def process_data(processor, metadata, data, msg, dt):
 
     try:
         # persist to data lake
-        dl_path = processor["conf"]["pathsDL"]["processed"]
         io.write_json_lines(
-            f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
+            f'data-lake/{processor["conf"]["pathsDL"]["processed"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
 
         # persist to db
         mongo_db = processor["mongo_db"]
@@ -89,12 +88,11 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
 
     try:
         # persist to data lake
-        dl_path = processor["conf"]["pathsDL"]["analyzed"]
         io.write_json_lines(
-            f'{dl_path}year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", analysis_results)
+            f'data-lake/{processor["conf"]["pathsDL"]["analyzed"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", analysis_results)
 
         # dont write car analysis data to db
-        if processor["conf"]["car"]:
+        if msg.topic() == processor["conf"]["topics"]["analysisCar"]:
             return
 
         # persist to db
@@ -123,7 +121,7 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
         raise e 
 
 
-def process_msg(msg, processor, region_id):
+def process_msg(msg, processor):
     """
     Extracts and decodes message
     Persists raw event 
@@ -137,7 +135,7 @@ def process_msg(msg, processor, region_id):
         key, value, metadata = extract_message(
             msg)
         
-        metadata["origin"] = region_id
+        metadata["origin"] = processor["conf"]["id"]
 
         # time data
         dt = metadata.get("datetime", datetime.now())
@@ -155,7 +153,7 @@ def process_msg(msg, processor, region_id):
             "value": value
         }
         io.write_data(
-            f'{processor["conf"]["pathsDL"]["events"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
+            f'data-lake/{processor["conf"]["pathsDL"]["events"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
         data = dict_tools.load_json_to_dict(value)
         if "id" in metadata:
@@ -179,11 +177,13 @@ def shutdown():
     running = False
 
 
-def consume_log(topics, processor, region_id):
+def consume_log(topics, processor):
     """Infinitly reads kafka log from latest point
 
     Args:
         topics (String[]): Topics to read from
+        processor (dict): Processor variabels
+        region_conf (dict): region name and id
 
     Raises:
         KafkaException: Kafka exception
@@ -211,7 +211,7 @@ def consume_log(topics, processor, region_id):
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
-                process_msg(msg, processor, region_id)
+                process_msg(msg, processor)
                 
     except Exception as e:
         logger.error(f'Error consuming kafka log : {str(e)}')
@@ -234,4 +234,4 @@ def start_processor(conf, topics, mongo_db, processor_type="ingest"):
         "mongo_db": mongo_db
     }
 
-    consume_log(topics, processor, processor["conf"]["origin"])
+    consume_log(topics, processor)
