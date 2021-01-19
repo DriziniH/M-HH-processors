@@ -145,7 +145,7 @@ def process_msg(msg, processor, region_id):
         month = dt.month
         year = dt.year
 
-        # persist raw events
+        # persist events
         event = {
             "topic": msg.topic(),
             "partition": msg.partition(),
@@ -154,9 +154,8 @@ def process_msg(msg, processor, region_id):
             "key": "" if key is None else key,
             "value": value
         }
-
         io.write_data(
-            f'{processor["conf"]["pathsDL"]["rawEvents"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
+            f'{processor["conf"]["pathsDL"]["events"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
         data = dict_tools.load_json_to_dict(value)
         if "id" in metadata:
