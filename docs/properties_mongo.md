@@ -4,11 +4,11 @@
 
 - Configuration (Region)
   - Name
-  - ID
-  - DL_Paths
-- Schemas (Array)
-  - Name
-  - ID
-  - Fields
-- Topics 
-  - Type (Array)
+  - Units
+    - ID
+    - DL_Paths
+    - Topics (In,Processed,AnalysisCar, AnalysisRegion)
+  - Schemas (Array)
+    - Name
+    - ID
+    - Fields
