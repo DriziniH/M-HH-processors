@@ -80,13 +80,13 @@ def start_car(amount, region, topic_produce, topics_consume):
 
 
         if region == "eu":
-            car_id = ps.IDS_EU.get(i, uuid.uuid4())
+            car_id = ps.IDS_EU.get(i, str(uuid.uuid4()))
             data = ps.get_car_data_eu()
         elif region == "usa":
-            car_id = ps.IDS_USA.get(i, uuid.uuid4())
+            car_id = ps.IDS_USA.get(i, str(uuid.uuid4()))
             data = ps.get_car_data_usa()
         elif region == "china":
-            car_id = ps.IDS_CHINA.get(i, uuid.uuid4())
+            car_id = ps.IDS_CHINA.get(i, str(uuid.uuid4()))
             data = ps.get_car_data_china()
 
         key = {"id": car_id}
