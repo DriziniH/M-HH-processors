@@ -1,3 +1,5 @@
 *.parquet
 data-lake/
 src/conf/properties_mongo.py
+/test.py
+docs/

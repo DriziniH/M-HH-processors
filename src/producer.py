@@ -36,6 +36,8 @@ def publish_infite(topic, key, data):
 
     while running:
         
+        print(key)
+        print(data)
         producer.produce(topic, key=json.dumps(key).encode(),
                          value=json.dumps(data).encode(), callback=acked)
 
