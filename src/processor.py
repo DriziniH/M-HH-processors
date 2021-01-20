@@ -27,7 +27,7 @@ def extract_message(msg):
         key = msg.key().decode('UTF-8')
         value = msg.value().decode('UTF-8')
 
-        metadata = dict_tools.load_json_to_dict(msg.key())
+        metadata = dict_tools.load_json_to_dict(key)
 
         timestamp_millis = msg.timestamp()[1]
         dt = datetime.fromtimestamp(timestamp_millis/1000)
@@ -149,8 +149,8 @@ def process_msg(msg, processor):
             "partition": msg.partition(),
             "offset": msg.offset(),
             "timestamp": msg.timestamp(),
-            "key": "" if key is None else json.loads(key),
-            "value": json.loads(value)
+            "key": "" if key is None else dict_tools.load_json_to_dict(key),
+            "value": dict_tools.load_json_to_dict(value)
         }
         io.write_data(
             f'data-lake/{processor["conf"]["pathsDL"]["events"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
