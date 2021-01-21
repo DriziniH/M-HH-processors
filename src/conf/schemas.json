@@ -31,12 +31,10 @@
                         }
                     },
                     {
-                        "name": "km_drive",
+                        "name": "km_start",
                         "type": "float",
                         "nullable": false,
-                        "metadata": {
-                            "corr_field": "kilometer"
-                        }
+                        "metadata": {}
                     }
                 ]
             },
@@ -111,6 +109,30 @@
                 ]
             },
             {
+                "name": "forward_collision_warning",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "airbag",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "service_call",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "lighting_system_failure",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
                 "name": "tire_pressure",
                 "type": "float",
                 "nullable": false,
@@ -135,7 +157,15 @@
                         "type": "float",
                         "nullable": false,
                         "metadata": {
-                            "corr_field": "temperature.car"
+                            "corr_field": "temperature.inside"
+                        }
+                    },
+                    {
+                        "name": "outside",
+                        "type": "float",
+                        "nullable": false,
+                        "metadata": {
+                            "corr_field": "temperature.outside"
                         }
                     },
                     {
@@ -188,7 +218,13 @@
             },
             {
                 "name": "acc",
-                "type": "float",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "airbag",
+                "type": "bool",
                 "nullable": false,
                 "metadata": {}
             },
@@ -292,7 +328,13 @@
                 "metadata": {}
             },
             {
-                "name": "mileage",
+                "name": "mileage_start",
+                "type": "float",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "estimated_range",
                 "type": "float",
                 "nullable": false,
                 "metadata": {}
@@ -335,21 +377,45 @@
                 "fields": [
                     {
                         "name": "engine",
-                        "type": "float",
+                        "type": "bool",
                         "nullable": false,
                         "metadata": {
-                            "corr_field": "health.engine"
+                            "corr_field": "health.engine_warning"
                         }
                     },
                     {
                         "name": "breaks",
-                        "type": "float",
+                        "type": "bool",
                         "nullable": false,
                         "metadata": {
-                            "corr_field": "health.breaks"
+                            "corr_field": "health.breaks_warning"
                         }
                     }
                 ]
+            },
+            {
+                "name": "forward_collision_warning",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "airbag",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "service_call",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "lighting_system_failure",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
             },
             {
                 "name": "tire_pressure",
@@ -372,11 +438,19 @@
                         }
                     },
                     {
-                        "name": "car",
+                        "name": "inside",
                         "type": "float",
                         "nullable": false,
                         "metadata": {
-                            "corr_field": "temperature.car"
+                            "corr_field": "temperature.inside"
+                        }
+                    },
+                    {
+                        "name": "outside",
+                        "type": "float",
+                        "nullable": false,
+                        "metadata": {
+                            "corr_field": "temperature.outside"
                         }
                     },
                     {
@@ -429,7 +503,13 @@
             },
             {
                 "name": "acc",
-                "type": "float",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "airbag",
+                "type": "bool",
                 "nullable": false,
                 "metadata": {}
             },
@@ -661,19 +741,19 @@
                 "metadata": {},
                 "fields": [
                     {
-                        "name": "engine",
+                        "name": "engine_warning",
                         "type": "float",
-                        "nullable": false,
+                        "nullable": "bool",
                         "metadata": {
-                            "corr_field": "health.engine"
+                            "corr_field": "health.engine_warning"
                         }
                     },
                     {
-                        "name": "breaks",
-                        "type": "float",
+                        "name": "breaks_warning",
+                        "type": "bool",
                         "nullable": false,
                         "metadata": {
-                            "corr_field": "health.breaks"
+                            "corr_field": "health.breaks_warning"
                         }
                     }
                 ]
@@ -812,14 +892,14 @@
                 "metadata": {},
                 "fields": [
                     {
-                        "name": "engine",
+                        "name": "engine_warning",
                         "type": "float",
-                        "nullable": false,
+                        "nullable": "bool",
                         "metadata": {}
                     },
                     {
-                        "name": "breaks",
-                        "type": "float",
+                        "name": "breaks_warning",
+                        "type": "bool",
                         "nullable": false,
                         "metadata": {}
                     }
@@ -915,6 +995,53 @@
                         "metadata": {}
                     }
                 ]
+            }
+        ]
+    },
+    {
+        "_id": "f5c5cea2-8632-46fd-9688-6337df797bb0",
+        "label": "Warnings EU",
+        "description": "Warning information for cars in the EU",
+        "fields": [
+            {
+                "name": "engine",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {
+                    "corr_field": "health.engine_warning"
+                }
+            },
+            {
+                "name": "breaks",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {
+                    "corr_field": "health.breaks_warning"
+                }
+            },
+            {
+                "name": "forward_collision_warning",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "airbag",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "service_call",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
+            },
+            {
+                "name": "lighting_system_failure",
+                "type": "bool",
+                "nullable": false,
+                "metadata": {}
             }
         ]
     }

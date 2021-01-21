@@ -51,7 +51,8 @@ def get_car_data_usa():
 
 
         "mileage_total":  random.uniform(2000.0, 100000.0),
-        "mileage": random.uniform(0.0, 500.0),
+        "mileage_start": random.uniform(0.0, 500.0),
+        "estimated_range": random.uniform(0.0, 500.0),
         "travel_time_total": random.randrange(0, 10000000000),
         "travel_time": random.randrange(0, 500),
 
@@ -60,15 +61,20 @@ def get_car_data_usa():
         "fuel_level": random.uniform(0.0, 90.0),
 
         "health": {
-            "engine": random.uniform(0.0, 100.0),
-            "breaks": random.uniform(0.0, 100.0),
+            "engine_warning": bool(random.getrandbits(1)),
+            "breaks_warning": bool(random.getrandbits(1)),
         },
-
+        "forward_collision_warning": bool(random.getrandbits(1)),
+        "airbag": bool(random.getrandbits(1)),
+        "service_call": bool(random.getrandbits(1)),
         "tire_pressure": random.uniform(0.0, 100.0),
+        "lighting_system_failure": bool(random.getrandbits(1)),
+
 
         "temperature": {
             "engine": random.uniform(0.0, 100.0),
-            "car": random.uniform(0.0, 100.0),
+            "inside": random.uniform(10.0, 40.0),
+            "outside": random.uniform(-10.0, 40.0),
             "breaks": random.uniform(0.0, 100.0),
             "tires": random.uniform(0.0, 100.0),
         },
@@ -80,7 +86,7 @@ def get_car_data_usa():
         "gas": bool(random.getrandbits(1)),
 
         "light": bool(random.getrandbits(1)),
-        "acc": random.uniform(0.0, 100.0),
+        "acc": bool(random.getrandbits(1)),
         "mph": random.uniform(0.0, 200.0),
         "rpm": random.uniform(0.0, 10000),
         "oxygen_level": random.uniform(0.0, 100.0),
@@ -104,7 +110,8 @@ def get_car_data_eu():
         "fuel": FUEL[random.randrange(0, 3)],
 
         "kilometer_total":  random.uniform(2000.0, 100000.0),
-        "kilometer": random.uniform(0.0, 500.0),
+        "kilometer_start": random.uniform(0.0, 500.0),
+        "estimated_range": random.uniform(0.0, 500.0),
         "travel_time_total": random.randrange(0, 10000000000),
         "travel_time": random.randrange(0, 500),
 
@@ -112,14 +119,19 @@ def get_car_data_eu():
         "break_fluid_level": random.uniform(0.0, 100.0),
         "fuel_level": random.uniform(0.0, 90.0),
 
-        "engine": random.uniform(0.0, 100.0),
-        "breaks": random.uniform(0.0, 100.0),
 
+        "engine_warning": bool(random.getrandbits(1)),
+        "breaks_warning": bool(random.getrandbits(1)),
+        "forward_collision_warning": bool(random.getrandbits(1)),
+        "airbag": bool(random.getrandbits(1)),
+        "service_call": bool(random.getrandbits(1)),
         "tire_pressure": random.uniform(0.0, 100.0),
+        "lighting_system_failure": bool(random.getrandbits(1)),
 
         "temperature": {
             "engine": random.uniform(0.0, 100.0),
-            "car": random.uniform(0.0, 100.0),
+            "inside": random.uniform(10.0, 40.0),
+            "outside": random.uniform(-10.0, 40.0),
             "breaks": random.uniform(0.0, 100.0),
             "tires": random.uniform(0.0, 100.0),
         },
@@ -131,7 +143,7 @@ def get_car_data_eu():
         "gas": bool(random.getrandbits(1)),
 
         "light": bool(random.getrandbits(1)),
-        "acc": random.uniform(0.0, 100.0),
+        "acc": bool(random.getrandbits(1)),
         "kmh": random.uniform(0.0, 200.0),
         "rpm": random.uniform(0.0, 10000),
         "oxygen_level": random.uniform(0.0, 100.0),

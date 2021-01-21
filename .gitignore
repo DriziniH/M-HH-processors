@@ -2,4 +2,5 @@
 data-lake/
 src/conf/properties_mongo.py
 /test.py
+test.py
 docs/
