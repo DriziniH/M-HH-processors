@@ -5,7 +5,7 @@ from src.utility.logger import logger
 from src.processor import start_processor
 from src.conf import properties_mongo as pm
 from src.utility.mongo_db import MongoDB
-
+from src.write_produced_schema_to_mongo import write_produced_schema_to_mongo
 
 mongo_db = MongoDB(pm.db_con, "M-HH")
 
@@ -24,7 +24,8 @@ for unit in units:
 # path_json = f"C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\CAR\\"
 # file_json = "car-usa.json"
 # path_parquet = f"C:\\Showcase\\Projekt\\M-HH-showcase-local\\data-lake\\S3_USA_PROCESSED\\CAR_PARQUET\\"
-
-
 # write_json_to_partioned_parquet(
 #     path_json, file_json, path_parquet, datetime.now() - timedelta(1))
+
+### Extract schema produced in given region (topic) and writes it to mongodb
+# write_produced_schema_to_mongo("car-usa", "f590cd1c-daec-4686-b9af-0bb831f9d5bc")
