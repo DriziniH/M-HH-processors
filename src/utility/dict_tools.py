@@ -50,6 +50,7 @@ def extract_schema(name, data):
     """Takes data from a dict and extracts it data and types to another dict
 
     Args:
+        name (String): Name of schema
         data (dict): data
 
     Returns:

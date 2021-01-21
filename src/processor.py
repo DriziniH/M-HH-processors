@@ -194,7 +194,7 @@ def consume_log(topics, processor):
     # https://docs.confluent.io/clients-confluent-kafka-python/current/index.html
     conf = {'bootstrap.servers': "localhost:9092",
             'group.id': "car",
-            'auto.offset.reset': 'smallest'}
+            'auto.offset.reset': 'latest'} #TODO smallest
 
     consumer = Consumer(conf)
 

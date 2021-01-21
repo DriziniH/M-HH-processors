@@ -1,494 +1,412 @@
-[
-    {
-        "_id": "d9c1d7e3-f428-4588-99b4-f5ee64b25e7a",
-        "label": "Region EU",
-        "topics": {
-            "ingest": "car-eu",
-            "processed": "car-eu-processed",
-            "analysisCar": "car-eu-analysis",
-            "analysisRegion": "region-eu-analysis"
-        },
-        "pathsDL": {
-            "events": "S3-eu_events/",
-            "raw": "S3-eu_raw/",
-            "processed": "S3-eu_processed/",
-            "analyzed": "S3-eu_analyzed/"
-        },
-        "producedData": [
-            {
-                "name": "model",
-                "type": "str"
-            },
-            {
-                "name": "labels",
-                "type": "list"
-            },
-            {
-                "name": "fuel",
-                "type": "str"
-            },
-            {
-                "name": "kilometer_total",
-                "type": "float"
-            },
-            {
-                "name": "kilometer",
-                "type": "float"
-            },
-            {
-                "name": "travel_time_total",
-                "type": "int"
-            },
-            {
-                "name": "travel_time",
-                "type": "int"
-            },
-            {
-                "name": "oil_level",
-                "type": "float"
-            },
-            {
-                "name": "break_fluid_level",
-                "type": "float"
-            },
-            {
-                "name": "fuel_level",
-                "type": "float"
-            },
-            {
-                "name": "engine",
-                "type": "float"
-            },
-            {
-                "name": "breaks",
-                "type": "float"
-            },
-            {
-                "name": "tire_pressure",
-                "type": "float"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "engine",
-                        "type": "float"
-                    },
-                    {
-                        "name": "car",
-                        "type": "float"
-                    },
-                    {
-                        "name": "breaks",
-                        "type": "float"
-                    },
-                    {
-                        "name": "tires",
-                        "type": "float"
-                    }
-                ],
-                "name": "temperature",
-                "type": "dict"
-            },
-            {
-                "name": "break_power",
-                "type": "float"
-            },
-            {
-                "name": "break",
-                "type": "bool"
-            },
-            {
-                "name": "gas_power",
-                "type": "float"
-            },
-            {
-                "name": "gas",
-                "type": "bool"
-            },
-            {
-                "name": "light",
-                "type": "bool"
-            },
-            {
-                "name": "acc",
-                "type": "float"
-            },
-            {
-                "name": "kmh",
-                "type": "float"
-            },
-            {
-                "name": "rpm",
-                "type": "float"
-            },
-            {
-                "name": "oxygen_level",
-                "type": "float"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "lat",
-                        "type": "float"
-                    },
-                    {
-                        "name": "lon",
-                        "type": "float"
-                    }
-                ],
-                "name": "pos",
-                "type": "dict"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "on",
-                        "type": "bool"
-                    },
-                    {
-                        "name": "service",
-                        "type": "str"
-                    },
-                    {
-                        "name": "volume",
-                        "type": "float"
-                    }
-                ],
-                "name": "infotainment",
-                "type": "dict"
-            }
-        ]
+[{
+    "_id": "f590cd1c-daec-4686-b9af-0bb831f9d5bc",
+    "label": "Region USA",
+    "topics": {
+      "ingest": "car-usa",
+      "processed": "car-usa-processed",
+      "analysisCar": "car-usa-analysis",
+      "analysisRegion": "region-usa-analysis"
     },
-    {
-        "_id": "f590cd1c-daec-4686-b9af-0bb831f9d5bc",
-        "label": "Region USA",
-        "topics": {
-            "ingest": "car-usa",
-            "processed": "car-usa-processed",
-            "analysisCar": "car-usa-analysis",
-            "analysisRegion": "region-usa-analysis"
-        },
-        "pathsDL": {
-            "events": "S3-usa_events/",
-            "raw": "S3-usa_raw/",
-            "processed": "S3-usa_processed/",
-            "analyzed": "S3-usa_analyzed/"
-        },
-        "producedData": [
-            {
-                "name": "model",
-                "type": "str"
-            },
-            {
-                "name": "labels",
-                "type": "list"
-            },
-            {
-                "name": "fuel",
-                "type": "str"
-            },
-            {
-                "name": "mileage_total",
-                "type": "float"
-            },
-            {
-                "name": "mileage",
-                "type": "float"
-            },
-            {
-                "name": "travel_time_total",
-                "type": "int"
-            },
-            {
-                "name": "travel_time",
-                "type": "int"
-            },
-            {
-                "name": "oil_level",
-                "type": "float"
-            },
-            {
-                "name": "break_fluid_level",
-                "type": "float"
-            },
-            {
-                "name": "fuel_level",
-                "type": "float"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "engine",
-                        "type": "float"
-                    },
-                    {
-                        "name": "breaks",
-                        "type": "float"
-                    }
-                ],
-                "name": "health",
-                "type": "dict"
-            },
-            {
-                "name": "tire_pressure",
-                "type": "float"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "engine",
-                        "type": "float"
-                    },
-                    {
-                        "name": "car",
-                        "type": "float"
-                    },
-                    {
-                        "name": "breaks",
-                        "type": "float"
-                    },
-                    {
-                        "name": "tires",
-                        "type": "float"
-                    }
-                ],
-                "name": "temperature",
-                "type": "dict"
-            },
-            {
-                "name": "break_power",
-                "type": "float"
-            },
-            {
-                "name": "break",
-                "type": "bool"
-            },
-            {
-                "name": "gas_power",
-                "type": "float"
-            },
-            {
-                "name": "gas",
-                "type": "bool"
-            },
-            {
-                "name": "light",
-                "type": "bool"
-            },
-            {
-                "name": "acc",
-                "type": "float"
-            },
-            {
-                "name": "mph",
-                "type": "float"
-            },
-            {
-                "name": "rpm",
-                "type": "float"
-            },
-            {
-                "name": "oxygen_level",
-                "type": "float"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "lat",
-                        "type": "float"
-                    },
-                    {
-                        "name": "lon",
-                        "type": "float"
-                    }
-                ],
-                "name": "pos",
-                "type": "dict"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "on",
-                        "type": "bool"
-                    },
-                    {
-                        "name": "service",
-                        "type": "str"
-                    },
-                    {
-                        "name": "volume",
-                        "type": "float"
-                    }
-                ],
-                "name": "infotainment",
-                "type": "dict"
-            }
-        ]
+    "pathsDL": {
+      "events": "S3-usa_events/",
+      "raw": "S3-usa_raw/",
+      "processed": "S3-usa_processed/",
+      "analyzed": "S3-usa_analyzed/"
     },
-    {
-        "_id": "4f5127bb-7326-4192-bbb2-eb397dd345d3",
-        "label": "Region China",
-        "topics": {
-            "ingest": "car-china",
-            "processed": "car-china-processed",
-            "analysisCar": "car-china-analysis",
-            "analysisRegion": "region-china-analysis"
-        },
-        "pathsDL": {
-            "events": "S3-china_events/",
-            "raw": "S3-china_raw/",
-            "processed": "S3-china_processed/",
-            "analyzed": "S3-china_analyzed/"
-        },
-        "producedData": [
-            {
-                "name": "model",
-                "type": "str"
-            },
-            {
-                "name": "labels",
-                "type": "list"
-            },
-            {
-                "name": "fuel",
-                "type": "str"
-            },
-            {
-                "name": "mileage_total",
-                "type": "float"
-            },
-            {
-                "name": "mileage",
-                "type": "float"
-            },
-            {
-                "name": "travel_time_total",
-                "type": "int"
-            },
-            {
-                "name": "travel_time",
-                "type": "int"
-            },
-            {
-                "name": "oil_level",
-                "type": "float"
-            },
-            {
-                "name": "break_fluid_level",
-                "type": "float"
-            },
-            {
-                "name": "fuel_level",
-                "type": "float"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "engine",
-                        "type": "float"
-                    },
-                    {
-                        "name": "breaks",
-                        "type": "float"
-                    }
-                ],
-                "name": "health",
-                "type": "dict"
-            },
-            {
-                "name": "tire_pressure",
-                "type": "float"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "engine",
-                        "type": "float"
-                    },
-                    {
-                        "name": "car",
-                        "type": "float"
-                    },
-                    {
-                        "name": "breaks",
-                        "type": "float"
-                    },
-                    {
-                        "name": "tires",
-                        "type": "float"
-                    }
-                ],
-                "name": "temperature",
-                "type": "dict"
-            },
-            {
-                "name": "break_power",
-                "type": "float"
-            },
-            {
-                "name": "break",
-                "type": "bool"
-            },
-            {
-                "name": "gas_power",
-                "type": "float"
-            },
-            {
-                "name": "gas",
-                "type": "bool"
-            },
-            {
-                "name": "light",
-                "type": "bool"
-            },
-            {
-                "name": "acc",
-                "type": "float"
-            },
-            {
-                "name": "mph",
-                "type": "float"
-            },
-            {
-                "name": "rpm",
-                "type": "float"
-            },
-            {
-                "name": "oxygen_level",
-                "type": "float"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "lat",
-                        "type": "float"
-                    },
-                    {
-                        "name": "lon",
-                        "type": "float"
-                    }
-                ],
-                "name": "pos",
-                "type": "dict"
-            },
-            {
-                "fields": [
-                    {
-                        "name": "on",
-                        "type": "bool"
-                    },
-                    {
-                        "name": "service",
-                        "type": "str"
-                    },
-                    {
-                        "name": "volume",
-                        "type": "float"
-                    }
-                ],
-                "name": "infotainment",
-                "type": "dict"
-            }
-        ]
-    }
-]
+    "producedData": [
+      {
+        "name": "id",
+        "type": "str"
+      },
+      {
+        "name": "model",
+        "type": "str"
+      },
+      {
+        "name": "labels",
+        "type": "list"
+      },
+      {
+        "name": "fuel",
+        "type": "str"
+      },
+      {
+        "name": "mileageTotal",
+        "type": "float"
+      },
+      {
+        "name": "mileageStart",
+        "type": "float"
+      },
+      {
+        "name": "estimatedRange",
+        "type": "float"
+      },
+      {
+        "name": "travelTimeTotal",
+        "type": "float"
+      },
+      {
+        "name": "travelTime",
+        "type": "float"
+      },
+      {
+        "name": "oilLevel",
+        "type": "float"
+      },
+      {
+        "name": "breakFluidLevel",
+        "type": "float"
+      },
+      {
+        "name": "fuelLevel",
+        "type": "float"
+      },
+      {
+        "name": "engineWarning",
+        "type": "bool"
+      },
+      {
+        "name": "breaksWarning",
+        "type": "bool"
+      },
+      {
+        "name": "forwardCollisionWarning",
+        "type": "bool"
+      },
+      {
+        "name": "airbag",
+        "type": "bool"
+      },
+      {
+        "name": "serviceCall",
+        "type": "bool"
+      },
+      {
+        "name": "tirePressure",
+        "type": "float"
+      },
+      {
+        "name": "lightingSystemFailure",
+        "type": "bool"
+      },
+      {
+        "name": "temperatureEngine",
+        "type": "float"
+      },
+      {
+        "name": "temperatureInside",
+        "type": "float"
+      },
+      {
+        "name": "temperatureOutside",
+        "type": "float"
+      },
+      {
+        "name": "temperatureBreaks",
+        "type": "float"
+      },
+      {
+        "name": "temperatureTires",
+        "type": "float"
+      },
+      {
+        "name": "breakPower",
+        "type": "float"
+      },
+      {
+        "name": "breakActive",
+        "type": "bool"
+      },
+      {
+        "name": "gasPower",
+        "type": "float"
+      },
+      {
+        "name": "gasActive",
+        "type": "bool"
+      },
+      {
+        "name": "light",
+        "type": "bool"
+      },
+      {
+        "name": "acc",
+        "type": "bool"
+      },
+      {
+        "name": "mph",
+        "type": "float"
+      },
+      {
+        "name": "rpm",
+        "type": "float"
+      },
+      {
+        "name": "oxygenLevel",
+        "type": "float"
+      },
+      {
+        "name": "lat",
+        "type": "float"
+      },
+      {
+        "name": "lon",
+        "type": "float"
+      },
+      {
+        "name": "infotainmentOn",
+        "type": "bool"
+      },
+      {
+        "name": "infotainmentService",
+        "type": "str"
+      },
+      {
+        "name": "infotainmentVolume",
+        "type": "float"
+      }
+    ]
+  },{
+    "_id": "4f5127bb-7326-4192-bbb2-eb397dd345d3",
+    "label": "Region China",
+    "topics": {
+      "ingest": "car-china",
+      "processed": "car-china-processed",
+      "analysisCar": "car-china-analysis",
+      "analysisRegion": "region-china-analysis"
+    },
+    "pathsDL": {
+      "events": "S3-china_events/",
+      "raw": "S3-china_raw/",
+      "processed": "S3-china_processed/",
+      "analyzed": "S3-china_analyzed/"
+    },
+    "producedData": [
+      {
+        "name": "id",
+        "type": "str"
+      },
+      {
+        "name": "模型",
+        "type": "str"
+      },
+      {
+        "name": "标签",
+        "type": "list"
+      },
+      {
+        "name": "燃料",
+        "type": "str"
+      },
+      {
+        "name": "千米_总",
+        "type": "float"
+      },
+      {
+        "name": "千米",
+        "type": "float"
+      },
+      {
+        "name": "旅行_时候_总",
+        "type": "float"
+      },
+      {
+        "name": "旅行_时候",
+        "type": "float"
+      },
+      {
+        "name": "油_层次",
+        "type": "float"
+      },
+      {
+        "name": "断裂_流畅_层次",
+        "type": "float"
+      },
+      {
+        "name": "燃料_层次",
+        "type": "float"
+      },
+      {
+        "name": "发动机",
+        "type": "float"
+      },
+      {
+        "name": "休息",
+        "type": "float"
+      },
+      {
+        "name": "胎压",
+        "type": "float"
+      }
+    ]
+  },{
+    "_id": "d9c1d7e3-f428-4588-99b4-f5ee64b25e7a",
+    "label": "Region EU",
+    "topics": {
+      "ingest": "car-eu",
+      "processed": "car-eu-processed",
+      "analysisCar": "car-eu-analysis",
+      "analysisRegion": "region-eu-analysis"
+    },
+    "pathsDL": {
+      "events": "S3-eu_events/",
+      "raw": "S3-eu_raw/",
+      "processed": "S3-eu_processed/",
+      "analyzed": "S3-eu_analyzed/"
+    },
+    "producedData": [
+      {
+        "name": "id",
+        "type": "str"
+      },
+      {
+        "name": "model",
+        "type": "str"
+      },
+      {
+        "name": "labels",
+        "type": "list"
+      },
+      {
+        "name": "fuel",
+        "type": "str"
+      },
+      {
+        "name": "kilometerTotal",
+        "type": "float"
+      },
+      {
+        "name": "kilometerStart",
+        "type": "float"
+      },
+      {
+        "name": "estimatedRange",
+        "type": "float"
+      },
+      {
+        "name": "travelTimeTotal",
+        "type": "float"
+      },
+      {
+        "name": "travelTime",
+        "type": "float"
+      },
+      {
+        "name": "oilLevel",
+        "type": "float"
+      },
+      {
+        "name": "breakFluidLevel",
+        "type": "float"
+      },
+      {
+        "name": "fuelLevel",
+        "type": "float"
+      },
+      {
+        "name": "engineWarning",
+        "type": "bool"
+      },
+      {
+        "name": "breaksWarning",
+        "type": "bool"
+      },
+      {
+        "name": "forwardCollisionWarning",
+        "type": "bool"
+      },
+      {
+        "name": "airbag",
+        "type": "bool"
+      },
+      {
+        "name": "serviceCall",
+        "type": "bool"
+      },
+      {
+        "name": "tirePressure",
+        "type": "float"
+      },
+      {
+        "name": "lightingSystemFailure",
+        "type": "bool"
+      },
+      {
+        "name": "temperatureEngine",
+        "type": "float"
+      },
+      {
+        "name": "temperatureInside",
+        "type": "float"
+      },
+      {
+        "name": "temperatureOutside",
+        "type": "float"
+      },
+      {
+        "name": "temperatureBreaks",
+        "type": "float"
+      },
+      {
+        "name": "temperatureTires",
+        "type": "float"
+      },
+      {
+        "name": "breakPower",
+        "type": "float"
+      },
+      {
+        "name": "breakActive",
+        "type": "bool"
+      },
+      {
+        "name": "gasPower",
+        "type": "float"
+      },
+      {
+        "name": "gasActive",
+        "type": "bool"
+      },
+      {
+        "name": "light",
+        "type": "bool"
+      },
+      {
+        "name": "acc",
+        "type": "bool"
+      },
+      {
+        "name": "kmh",
+        "type": "float"
+      },
+      {
+        "name": "rpm",
+        "type": "float"
+      },
+      {
+        "name": "oxygenLevel",
+        "type": "float"
+      },
+      {
+        "name": "lat",
+        "type": "float"
+      },
+      {
+        "name": "lon",
+        "type": "float"
+      },
+      {
+        "name": "infotainmentOn",
+        "type": "bool"
+      },
+      {
+        "name": "infotainmentService",
+        "type": "str"
+      },
+      {
+        "name": "infotainmentVolume",
+        "type": "float"
+      }
+    ]
+  }]
