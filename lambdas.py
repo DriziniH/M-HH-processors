@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 
 from src.utility.logger import logger
 from src.processor import start_processor
-from src import constants as c
 from src.conf import properties_mongo as pm
 from src.utility.mongo_db import MongoDB
 

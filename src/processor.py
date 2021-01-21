@@ -4,12 +4,12 @@ from confluent_kafka import Consumer, Producer, KafkaError, KafkaException
 from datetime import datetime
 
 import src.utility.io as io
-import src.constants as c
 from src.utility import dict_tools
 from src.utility.logger import logger
 
 
 running = True
+
 
 def extract_message(msg):
     """Decodes and extracts metadata information from kafka message
@@ -24,10 +24,14 @@ def extract_message(msg):
         tuple: key, value, metadata
     """
     try:
-        key = msg.key().decode('UTF-8')
-        value = msg.value().decode('UTF-8')
+        metadata = {}
 
-        metadata = dict_tools.load_json_to_dict(key)
+        if msg.key():
+            key = msg.key().decode('UTF-8')
+            metadata = dict_tools.load_json_to_dict(key)
+            metadata["key"] = key
+
+        data = dict_tools.load_json_to_dict(msg.value().decode('UTF-8'))
 
         timestamp_millis = msg.timestamp()[1]
         dt = datetime.fromtimestamp(timestamp_millis/1000)
@@ -35,11 +39,12 @@ def extract_message(msg):
         metadata["timestamp"] = timestamp_millis
         metadata["datetime"] = dt
 
-        return key, value, metadata
+        return metadata, data
 
     except Exception as e:
         logger.warning(e)
         return None
+
 
 def process_data(processor, metadata, data, msg, dt):
     """Writes processed data to data lake and updates mongodb
@@ -63,7 +68,7 @@ def process_data(processor, metadata, data, msg, dt):
             "processed")
 
         _id = {
-            "_id" : data.pop("id"),
+            "_id": data.pop("id"),
             "_unit":  metadata["unit"]
         }
 
@@ -118,7 +123,7 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
 
     except Exception as e:
         logger.error(f'Failed to process analysis results: {str(e)}')
-        raise e 
+        raise e
 
 
 def process_msg(msg, processor):
@@ -132,9 +137,8 @@ def process_msg(msg, processor):
         msg (kafka message): kafka message
     """
     try:
-        key, value, metadata = extract_message(
-            msg)
-        
+        metadata, data = extract_message(msg)
+
         metadata["unit"] = processor["conf"]["_id"]
 
         # time data
@@ -149,17 +153,16 @@ def process_msg(msg, processor):
             "partition": msg.partition(),
             "offset": msg.offset(),
             "timestamp": msg.timestamp(),
-            "key": "" if key is None else dict_tools.load_json_to_dict(key),
-            "value": dict_tools.load_json_to_dict(value)
+            "value": data
         }
+        if "key" in metadata:
+            event["key"] = dict_tools.load_json_to_dict(metadata["key"])
+
         io.write_data(
             f'data-lake/{processor["conf"]["pathsDL"]["events"]}year={year}\month={month}\day={day}\{msg.topic()}', 'a', json.dumps(event))
 
-        data = dict_tools.load_json_to_dict(value)
-        if "id" in metadata:
-            data.update({"id": metadata["id"]})
         data["timestamp"] = msg.timestamp()[1]
-        
+
         proc_type = processor.get("proc_type", None)
         if proc_type == "ingest":
             process_data(processor, metadata, data, msg, dt)
@@ -207,12 +210,12 @@ def consume_log(topics, processor):
                 if msg.error().code() == KafkaError._PARTITION_EOF:
                     # End of partition event
                     logger.error('%% %s [%d] reached end at offset %d\n' %
-                                     (msg.topic(), msg.partition(), msg.offset()))
+                                 (msg.topic(), msg.partition(), msg.offset()))
                 elif msg.error():
                     raise KafkaException(msg.error())
             else:
                 process_msg(msg, processor)
-                
+
     except Exception as e:
         logger.error(f'Error consuming kafka log : {str(e)}')
     finally:
