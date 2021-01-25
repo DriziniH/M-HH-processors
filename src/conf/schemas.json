@@ -5,39 +5,33 @@
         "description": "Complete schema from data produced by cars in the EU",
         "fields": [
             {
-                "name": "id",
+                "name": "_id",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "model",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "labels",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "fuel",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "km",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "kmTotal",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "kilometerTotal"
                         }
@@ -45,7 +39,6 @@
                     {
                         "name": "kmStart",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "kilometerStart"
                         }
@@ -53,7 +46,6 @@
                     {
                         "name": "estimatedRange",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -61,13 +53,11 @@
             {
                 "name": "time",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "timeTotal",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "travelTimeTotal"
                         }
@@ -75,7 +65,6 @@
                     {
                         "name": "timeDrive",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "travelTime"
                         }
@@ -85,25 +74,21 @@
             {
                 "name": "levels",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "oilLevel",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "fuelLevel",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "breakFluidLevel",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -111,43 +96,36 @@
             {
                 "name": "warning",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "engineWarning",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "breaksWarning",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "forwardCollisionWarning",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "airbag",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "serviceCall",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "lightingSystemFailure",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -155,19 +133,16 @@
             {
                 "name": "tirePressure",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "temperature",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "engine",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureEngine"
                         }
@@ -175,7 +150,6 @@
                     {
                         "name": "car",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureInside"
                         }
@@ -183,7 +157,6 @@
                     {
                         "name": "outside",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureOutside"
                         }
@@ -191,7 +164,6 @@
                     {
                         "name": "breaks",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureBreaks"
                         }
@@ -199,7 +171,6 @@
                     {
                         "name": "tires",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureTires"
                         }
@@ -209,73 +180,61 @@
             {
                 "name": "breakPower",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "breakActive",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "gasPower",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "gasActive",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "light",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "acc",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "kmh",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "rpm",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "oxygenLevel",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "pos",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "lat",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "lon",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -283,13 +242,11 @@
             {
                 "name": "infotainment",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "on",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "infotainmentOn"
                         }
@@ -297,7 +254,6 @@
                     {
                         "name": "service",
                         "type": "str",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "infotainmentService"
                         }
@@ -305,7 +261,6 @@
                     {
                         "name": "volume",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "infotainmentVolume"
                         }
@@ -320,87 +275,73 @@
         "description": "Complete schema from data produced by cars in the USA",
         "fields": [
             {
-                "name": "id",
+                "name": "_id",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "model",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "labels",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "fuel",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "mileageTotal",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "mileageStart",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "estimatedRange",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "travelTimeTotal",
                 "type": "int",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "travelTime",
                 "type": "int",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "oilLevel",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "breakFluidLevel",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "fuelLevel",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "health",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "engine",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "engineWarning"
                         }
@@ -408,7 +349,6 @@
                     {
                         "name": "breaks",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "breaksWarning"
                         }
@@ -418,43 +358,36 @@
             {
                 "name": "forwardCollisionWarning",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "airbag",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "serviceCall",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "lightingSystemFailure",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "tirePressure",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "temperature",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "engine",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureEngine"
                         }
@@ -462,7 +395,6 @@
                     {
                         "name": "inside",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureInside"
                         }
@@ -470,7 +402,6 @@
                     {
                         "name": "outside",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureOutside"
                         }
@@ -478,7 +409,6 @@
                     {
                         "name": "breaks",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureBreaks"
                         }
@@ -486,7 +416,6 @@
                     {
                         "name": "tires",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureTires"
                         }
@@ -496,79 +425,66 @@
             {
                 "name": "breakPower",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "breakActive",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "gasPower",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "gasActive",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "light",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "acc",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "airbag",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "mph",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "rpm",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "oxygenLevel",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "pos",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "lat",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "lon",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -576,13 +492,11 @@
             {
                 "name": "infotainment",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "on",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "infotainmentOn"
                         }
@@ -590,7 +504,6 @@
                     {
                         "name": "service",
                         "type": "str",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "infotainmentService"
                         }
@@ -598,7 +511,6 @@
                     {
                         "name": "volume",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "infotainmentVolume"
                         }
@@ -615,73 +527,61 @@
             {
                 "name": "模型",
                 "type": "string",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "燃料",
                 "type": "string",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "千米_总",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "千米",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "旅行_时候_总",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "旅行_时候",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "油_层次",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "断裂_流畅_层次",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "燃料_层次",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "发动机",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "休息",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "胎压",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             }
         ]
@@ -694,13 +594,11 @@
             {
                 "name": "model",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "fuel",
                 "type": "str",
-                "nullable": false,
                 "metadata": {}
             }
         ]
@@ -713,49 +611,41 @@
             {
                 "name": "mileageTotal",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
-                "name": "mileage",
+                "name": "mileageStart",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "travelTimeTotal",
                 "type": "int",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "travelTime",
                 "type": "int",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "oilLevel",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "breakFluidLevel",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "fuelLevel",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "health",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
@@ -767,7 +657,6 @@
                     {
                         "name": "breaksWarning",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -775,25 +664,21 @@
             {
                 "name": "tirePressure",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "temperature",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "temperatureEngine",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "temperatureCar",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "temperatureInside"
                         }
@@ -801,13 +686,11 @@
                     {
                         "name": "temperatureBreaks",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "temperatureTires",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -822,13 +705,11 @@
             {
                 "name": "km",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "kmTotal",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "kilometerTotal"
                         }
@@ -836,7 +717,6 @@
                     {
                         "name": "kmStart",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "kilometerStart"
                         }
@@ -846,13 +726,11 @@
             {
                 "name": "time",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "timeTotal",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "travelTimeTotal"
                         }
@@ -860,7 +738,6 @@
                     {
                         "name": "timeStart",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "travelTime"
                         }
@@ -870,25 +747,21 @@
             {
                 "name": "levels",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "oilLevel",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "fuelLevel",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "breakFluidLevel",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -896,7 +769,6 @@
             {
                 "name": "health",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
@@ -908,7 +780,6 @@
                     {
                         "name": "breaksWarning",
                         "type": "bool",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -916,7 +787,6 @@
             {
                 "name": "tirePressure",
                 "type": "float",
-                "nullable": false,
                 "metadata": {}
             }
         ]
@@ -929,13 +799,11 @@
             {
                 "name": "km",
                 "type": "dict",
-                "nullable": false,
                 "metadata": {},
                 "fields": [
                     {
                         "name": "kmTotal",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "kilometerTotal"
                         }
@@ -943,7 +811,6 @@
                     {
                         "name": "kmStart",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {
                             "corr_field": "kilometerStart"
                         }
@@ -951,31 +818,26 @@
                     {
                         "name": "mileageTotal",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
-                        "name": "mileage",
+                        "name": "mileageStart",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "pos",
                         "type": "dict",
-                        "nullable": false,
                         "metadata": {},
                         "fields": [
                             {
                                 "name": "lat",
                                 "type": "float",
-                                "nullable": false,
                                 "metadata": {}
                             },
                             {
                                 "name": "lon",
                                 "type": "float",
-                                "nullable": false,
                                 "metadata": {}
                             }
                         ]
@@ -983,13 +845,11 @@
                     {
                         "name": "kmh",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     },
                     {
                         "name": "mph",
                         "type": "float",
-                        "nullable": false,
                         "metadata": {}
                     }
                 ]
@@ -1004,7 +864,6 @@
             {
                 "name": "engine",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {
                     "corr_field": "EngineWarning"
                 }
@@ -1012,7 +871,6 @@
             {
                 "name": "breaks",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {
                     "corr_field": "breaksWarning"
                 }
@@ -1020,25 +878,21 @@
             {
                 "name": "forwardCollisionWarning",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "airbag",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "serviceCall",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             },
             {
                 "name": "lightingSystemFailure",
                 "type": "bool",
-                "nullable": false,
                 "metadata": {}
             }
         ]

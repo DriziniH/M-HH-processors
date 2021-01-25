@@ -60,7 +60,7 @@ def process_data(processor, metadata, data, msg, dt):
     try:
         # persist to data lake
         io.write_json_lines(
-            f'data-lake/{processor["conf"]["pathsDL"]["processed"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
+            f'data-lake/{processor["conf"]["pathsDL"]["staging"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
 
         # persist to db
         mongo_db = processor["mongo_db"]
@@ -94,7 +94,7 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
     try:
         # persist to data lake
         io.write_json_lines(
-            f'data-lake/{processor["conf"]["pathsDL"]["analyzed"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", analysis_results)
+            f'data-lake/{processor["conf"]["pathsDL"]["analytics"]}flink/json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", analysis_results)
 
         # dont write car analysis data to db
         if msg.topic() == processor["conf"]["topics"]["analysisCar"]:

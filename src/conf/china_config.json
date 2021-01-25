@@ -1,0 +1,87 @@
+{
+    "_id": "4f5127bb-7326-4192-bbb2-eb397dd345d3",
+    "awsRegion": "asia-central-1",
+    "label": "Region China",
+    "topics": {
+        "ingest": ["car-china"],
+        "processed": ["car-china-processed"],
+        "analysisCar": "car-china-analysis",
+        "analysisRegion": "region-china-analysis"
+    },
+    "pathsDL": {
+        "events": "S3-china_events/",
+        "landing": "S3-china_landing/",
+        "staged": "S3-china_staged/",
+        "consumer": "S3-china_consumer/",
+        "analytics": "S3-china_analytics/"
+    },
+    "schemas": [
+        {
+            "_id": "b492a53d-b0fe-42d4-a02b-8ad054977f12",
+            "label": "China",
+            "description": "Complete schema from data produced by cars in china",
+            "fields": [
+                {
+                    "name": "模型",
+                    "type": "string",
+                    "metadata": {}
+                },
+                {
+                    "name": "燃料",
+                    "type": "string",
+                    "metadata": {}
+                },
+                {
+                    "name": "千米_总",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "千米",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "旅行_时候_总",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "旅行_时候",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "油_层次",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "断裂_流畅_层次",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "燃料_层次",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "发动机",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "休息",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "胎压",
+                    "type": "float",
+                    "metadata": {}
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,381 @@
+{
+    "_id": "f590cd1c-daec-4686-b9af-0bb831f9d5bc",
+    "awsRegion": "usa-central-1",
+    "label": "Region USA",
+    "topics": {
+        "ingest": ["car-usa"],
+        "processed": ["car-usa-processed"],
+        "analysisCar": "car-usa-analysis",
+        "analysisRegion": "region-usa-analysis"
+    },
+    "pathsDL": {
+        "events": "S3-usa_events/",
+        "landing": "S3-usa_landing/",
+        "staged": "S3-usa_staged/",
+        "consumer": "S3-usa_consumer/",
+        "analytics": "S3-usa_analytics/"
+    },
+    "schemas": [
+        {
+            "_id": "b74bd1b5-0d0f-41e9-bb56-d1659a44dfb7",
+            "label": "USA",
+            "description": "Complete schema from data produced by cars in the USA",
+            "fields": [
+                {
+                    "name": "_id",
+                    "type": "str",
+                    "metadata": {}
+                },
+                {
+                    "name": "model",
+                    "type": "str",
+                    "metadata": {}
+                },
+                {
+                    "name": "labels",
+                    "type": "str",
+                    "metadata": {}
+                },
+                {
+                    "name": "fuel",
+                    "type": "str",
+                    "metadata": {}
+                },
+                {
+                    "name": "mileageTotal",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "mileageStart",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "estimatedRange",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "travelTimeTotal",
+                    "type": "int",
+                    "metadata": {}
+                },
+                {
+                    "name": "travelTime",
+                    "type": "int",
+                    "metadata": {}
+                },
+                {
+                    "name": "oilLevel",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "breakFluidLevel",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "fuelLevel",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "health",
+                    "type": "dict",
+                    "metadata": {},
+                    "fields": [
+                        {
+                            "name": "engine",
+                            "type": "bool",
+                            "metadata": {
+                                "corr_field": "engineWarning"
+                            }
+                        },
+                        {
+                            "name": "breaks",
+                            "type": "bool",
+                            "metadata": {
+                                "corr_field": "breaksWarning"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "forwardCollisionWarning",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "airbag",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "serviceCall",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "lightingSystemFailure",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "tirePressure",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "temperature",
+                    "type": "dict",
+                    "metadata": {},
+                    "fields": [
+                        {
+                            "name": "engine",
+                            "type": "float",
+                            "metadata": {
+                                "corr_field": "temperatureEngine"
+                            }
+                        },
+                        {
+                            "name": "inside",
+                            "type": "float",
+                            "metadata": {
+                                "corr_field": "temperatureInside"
+                            }
+                        },
+                        {
+                            "name": "outside",
+                            "type": "float",
+                            "metadata": {
+                                "corr_field": "temperatureOutside"
+                            }
+                        },
+                        {
+                            "name": "breaks",
+                            "type": "float",
+                            "metadata": {
+                                "corr_field": "temperatureBreaks"
+                            }
+                        },
+                        {
+                            "name": "tires",
+                            "type": "float",
+                            "metadata": {
+                                "corr_field": "temperatureTires"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "breakPower",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "breakActive",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "gasPower",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "gasActive",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "light",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "acc",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "airbag",
+                    "type": "bool",
+                    "metadata": {}
+                },
+                {
+                    "name": "mph",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "rpm",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "oxygenLevel",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "pos",
+                    "type": "dict",
+                    "metadata": {},
+                    "fields": [
+                        {
+                            "name": "lat",
+                            "type": "float",
+                            "metadata": {}
+                        },
+                        {
+                            "name": "lon",
+                            "type": "float",
+                            "metadata": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "infotainment",
+                    "type": "dict",
+                    "metadata": {},
+                    "fields": [
+                        {
+                            "name": "on",
+                            "type": "bool",
+                            "metadata": {
+                                "corr_field": "infotainmentOn"
+                            }
+                        },
+                        {
+                            "name": "service",
+                            "type": "str",
+                            "metadata": {
+                                "corr_field": "infotainmentService"
+                            }
+                        },
+                        {
+                            "name": "volume",
+                            "type": "float",
+                            "metadata": {
+                                "corr_field": "infotainmentVolume"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "_id": "e8ba2cef-3c6a-4037-9080-f890112e9942",
+            "label": "Car-info",
+            "description": "Schema that contains all descriptive information about a car",
+            "fields": [
+                {
+                    "name": "model",
+                    "type": "str",
+                    "metadata": {}
+                },
+                {
+                    "name": "fuel",
+                    "type": "str",
+                    "metadata": {}
+                }
+            ]
+        },
+        {
+            "_id": "27c61b6d-ca68-49b6-b03a-8ec9e7d3764d",
+            "label": "Car status",
+            "description": "Schema that contains all descriptive information about the car status",
+            "fields": [
+                {
+                    "name": "mileageTotal",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "mileageStart",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "travelTimeTotal",
+                    "type": "int",
+                    "metadata": {}
+                },
+                {
+                    "name": "travelTime",
+                    "type": "int",
+                    "metadata": {}
+                },
+                {
+                    "name": "oilLevel",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "breakFluidLevel",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "fuelLevel",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "health",
+                    "type": "dict",
+                    "metadata": {},
+                    "fields": [
+                        {
+                            "name": "engineWarning",
+                            "type": "float",
+                            "nullable": "bool",
+                            "metadata": {}
+                        },
+                        {
+                            "name": "breaksWarning",
+                            "type": "bool",
+                            "metadata": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "tirePressure",
+                    "type": "float",
+                    "metadata": {}
+                },
+                {
+                    "name": "temperature",
+                    "type": "dict",
+                    "metadata": {},
+                    "fields": [
+                        {
+                            "name": "temperatureEngine",
+                            "type": "float",
+                            "metadata": {}
+                        },
+                        {
+                            "name": "temperatureCar",
+                            "type": "float",
+                            "metadata": {
+                                "corr_field": "temperatureInside"
+                            }
+                        },
+                        {
+                            "name": "temperatureBreaks",
+                            "type": "float",
+                            "metadata": {}
+                        },
+                        {
+                            "name": "temperatureTires",
+                            "type": "float",
+                            "metadata": {}
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
