@@ -6,6 +6,7 @@ from datetime import datetime
 import src.utility.io as io
 from src.utility import dict_tools
 from src.utility.logger import logger
+from src.utility.graph_tools import create_json_graph
 
 
 running = True
@@ -60,7 +61,7 @@ def process_data(processor, metadata, data, msg, dt):
     try:
         # persist to data lake
         io.write_json_lines(
-            f'data-lake/{processor["conf"]["pathsDL"]["staging"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
+            f'data-lake/{processor["conf"]["pathsDL"]["staged"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
 
         # persist to db
         mongo_db = processor["mongo_db"]
@@ -72,7 +73,7 @@ def process_data(processor, metadata, data, msg, dt):
             "_unit":  metadata["unit"]
         }
 
-        mongo_db.upsert_to_mongodb(
+        mongo_db.update_to_mongodb(
             col=db_col, _id=_id, data=data, mode="$set")
 
     except Exception as e:
@@ -104,22 +105,44 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
         mongo_db = processor["mongo_db"]
         db_col = mongo_db.get_collection("analysis")
 
-        _id = {"_type": metadata["type"],
-               "_unit": metadata["unit"]}
+        _id = {"_id": metadata["unit"]}
 
         json_graph = analysis_results["jsonGraph"]
-        # update fields with $set operator is values are lists
-        if type(json_graph["x"]) is list and type(json_graph["y"]) is list:
-            mongo_db.upsert_to_mongodb(
-                col=db_col, _id=_id, data=analysis_results, mode="$set")
-        else:  # update fields and update append arrays
-            values = {"jsonGraph": {
-                "x":  analysis_results["jsonGraph"].pop("x"), "y": analysis_results["jsonGraph"].pop("y")}}
 
-            mongo_db.upsert_to_mongodb(
-                col=db_col, _id=_id, data=analysis_results, mode="$set")
-            mongo_db.upsert_to_mongodb(
-                col=db_col, _id=_id, data=values, mode="$push")
+        # Push x and y for appending values
+        if not type(json_graph["x"]) is list and not type(json_graph["y"]) is list:
+            mongo_db.update_to_mongodb(
+                col=db_col, _id=_id, data={"x": json_graph["x"], "y": json_graph["y"]}, mode="$push")
+
+            # Read complete x and y for graph
+            result = db_col.find_one(_id)
+            json_graph["x"] = result["x"]
+            json_graph["y"] = result["y"]
+
+        # Upsert label of region
+        mongo_db.update_to_mongodb(
+            col=db_col, _id=_id, data={"label": processor["conf"]["label"]}, mode="$set")
+
+        title = json_graph.get("layout" , "").get("title", "")
+        chart_type = json_graph.get("type","")
+
+        # Upsert Array entry
+        data = {"graphs.$.type": metadata["type"],
+                "graphs.$.title": title,
+                "graphs.$.jsonGraph":  create_json_graph(json_graph)}
+        _id.update({"graphs.type": metadata["type"]})
+
+        if not mongo_db.update_to_mongodb(
+                col=db_col, _id=_id, data=data, mode="$set", upsert=False):
+
+            _id.pop("graphs.type")
+            data = {
+                "type": metadata["type"],
+                "title": title,
+                "chartType": chart_type,
+                "jsonGraph": create_json_graph(json_graph)}
+
+            db_col.update_one(_id, {'$push':  {'graphs': data}}, upsert=True)
 
     except Exception as e:
         logger.error(f'Failed to process analysis results: {str(e)}')
@@ -129,7 +152,7 @@ def process_analysis_results(processor, metadata, analysis_results, msg, dt):
 def process_msg(msg, processor):
     """
     Extracts and decodes message
-    Persists raw event 
+    Persists raw event
     Persists decoded and enriched data as json
     Writes data to MongoDB
 
@@ -194,7 +217,7 @@ def consume_log(topics, processor):
     # https://docs.confluent.io/clients-confluent-kafka-python/current/index.html
     conf = {'bootstrap.servers': "localhost:9092",
             'group.id': "car",
-            'auto.offset.reset': 'latest'} #TODO smallest
+            'auto.offset.reset': 'latest'}  # TODO smallest
 
     consumer = Consumer(conf)
 

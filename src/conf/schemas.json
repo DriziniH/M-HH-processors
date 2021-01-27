@@ -865,7 +865,7 @@
                 "name": "engine",
                 "type": "bool",
                 "metadata": {
-                    "corr_field": "EngineWarning"
+                    "corr_field": "engineWarning"
                 }
             },
             {
