@@ -27,7 +27,7 @@ class MongoDB():
             logger.error(f'Error connecting to MongoDB : {str(e)}')
             raise e
 
-    def upsert_to_mongodb(self, col, _id=None, data=None, mode="$set"):
+    def update_to_mongodb(self, col, _id=None, data=None, mode="$set", upsert=True):
         """Writes or updates data for a nested document with a given id
 
         Args:
