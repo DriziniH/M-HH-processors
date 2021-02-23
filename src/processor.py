@@ -61,7 +61,7 @@ def process_data(processor, metadata, data, msg, dt):
     try:
         # persist to data lake
         io.write_json_lines(
-            f'data-lake/{processor["conf"]["pathsDL"]["staged"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
+            f'data-lake/{processor["conf"]["pathsDL"]["landing"]}json/year={dt.year}\\month={dt.month}\\day={dt.day}\\{msg.topic()}.json', "a", data)
 
         # persist to db
         mongo_db = processor["mongo_db"]
