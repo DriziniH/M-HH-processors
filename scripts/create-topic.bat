@@ -1,1 +1,0 @@
-C:\Showcase\kafka\bin\windows\kafka-topics --create --topic global-analysis --bootstrap-server localhost:9092

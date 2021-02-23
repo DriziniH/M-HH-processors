@@ -1,1 +1,0 @@
-C:\Showcase\kafka\bin\windows\zookeeper-server-start C:\Showcase\kafka\config\zookeeper.properties

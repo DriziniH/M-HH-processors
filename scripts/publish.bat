@@ -1,1 +1,0 @@
-C:\Showcase\kafka\bin\windows\kafka-console-producer --topic car-eu-processed --bootstrap-server localhost:9092

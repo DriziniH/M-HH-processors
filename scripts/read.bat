@@ -1,1 +1,0 @@
-C:\Showcase\kafka\bin\windows\kafka-console-consumer --topic region-eu-analysis --from-beginning --bootstrap-server localhost:9092
