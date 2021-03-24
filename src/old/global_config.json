@@ -1,21 +1,23 @@
 {
-    "region": "eu-central-1",
+    "awsRegion": "eu-central-1",
     "topics": {
         "analysis": "global-analysis"
     },
     "units": [
         {
             "_id": "f590cd1c-daec-4686-b9af-0bb831f9d5bc",
-            "region": "usa-central-1",
+            "awsRegion": "usa-central-1",
             "label": "Region USA",
             "topics": {
-                "ingest": "car",
-                "analysisCar": "car-analysis",
-                "analysisRegion": "region-analysis"
+                "ingest": "car-usa",
+                "processed": "car-usa-processed",
+                "analysisCar": "car-usa-analysis",
+                "analysisRegion": "region-usa-analysis"
             },
             "pathsDL": {
                 "events": "S3-usa_events/",
                 "landing": "S3-usa_landing/",
+                "staged": "S3-usa_staged/",
                 "consumer": "S3-usa_consumer/",
                 "analytics": "S3-usa_analytics/"
             },
@@ -385,7 +387,7 @@
         },
         {
             "_id": "4f5127bb-7326-4192-bbb2-eb397dd345d3",
-            "region": "asia-central-1",
+            "awsRegion": "asia-central-1",
             "label": "Region China",
             "topics": {
                 "ingest": "car-china",
@@ -472,7 +474,7 @@
         },
         {
             "_id": "d9c1d7e3-f428-4588-99b4-f5ee64b25e7a",
-            "region": "eu-central-1",
+            "awsRegion": "eu-central-1",
             "label": "Region EU",
             "topics": {
                 "ingest": "car-eu",

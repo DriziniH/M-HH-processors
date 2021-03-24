@@ -1,0 +1,71 @@
+{
+  "gateway": {
+    "usa-central-2": "https://yxpto86cag.execute-api.us-east-2.amazonaws.com",
+    "eu-central-1": "https://1k41amyped.execute-api.eu-central-1.amazonaws.com"
+  },
+  "security": "aws-iam",
+  "dataProducts": [
+    {
+      "_id": "f590cd1c-daec-4686-b9af-0bb831f9d5bc",
+      "region": "usa-central-2",
+      "label": "Region USA",
+      "interfaces": {
+        "graphql": "/usa",
+        "streams": [
+          {
+            "topic": "region-usa-filter",
+            "description": "Filtered data",
+            "data": {
+              "id": "String",
+              "consumptionKm": "Double",
+              "co2Km": "Double",
+              "geoChip": "Boolean",
+              "breaksHealth": "Double",
+              "engineHealth": "Double",
+              "tireHealth": "Double",
+              "mufflerHealth": "Double",
+              "gearsHealth": "Double",
+              "batteryHealth": "Double",
+              "lat": "Double",
+              "lon": "Double",
+              "model": "String",
+              "fuel": "String"
+            }
+          }
+        ],
+        "catalog": true
+      }
+    },
+    {
+      "_id": "d9c1d7e3-f428-4588-99b4-f5ee64b25e7a",
+      "region": "eu-central-1",
+      "label": "Region EU",
+      "interfaces": {
+        "graphql": "/eu",
+        "streams": [
+          {
+            "topic": "region-eu-filter",
+            "description": "Filtered data",
+            "data": {
+              "id": "String",
+              "consumptionKm": "Double",
+              "co2Km": "Double",
+              "geoChip": "Boolean",
+              "breaksHealth": "Double",
+              "engineHealth": "Double",
+              "tireHealth": "Double",
+              "mufflerHealth": "Double",
+              "gearsHealth": "Double",
+              "batteryHealth": "Double",
+              "lat": "Double",
+              "lon": "Double",
+              "model": "String",
+              "fuel": "String"
+            }
+          }
+        ],
+        "catalog": true
+      }
+    }
+  ]
+}
